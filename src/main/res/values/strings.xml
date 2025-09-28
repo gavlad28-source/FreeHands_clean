@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Information -->
+    <string name="app_name">FreeHands Voice Assistant</string>
+    <string name="app_subtitle">Secure hands-free phone control with voice biometrics</string>
+    
+    <!-- Main Activity -->
+    <string name="status_title">Service Status</string>
+    <string name="status_initial">FreeHands is not active. Complete setup to begin hands-free control.</string>
+    <string name="setup_button_text">Setup &amp; Start FreeHands</string>
+    <string name="setup_instructions">Grant all permissions and enable accessibility service for full hands-free control. Your voice will be securely authenticated before each command.</string>
+    
+    <!-- Security -->
+    <string name="security_notice">Your voice patterns are encrypted and stored locally on your device for security.</string>
+    <string name="security_icon_desc">Security shield icon</string>
+    
+    <!-- Accessibility Service -->
+    <string name="accessibility_service_description">FreeHands Voice Assistant uses accessibility services to provide hands-free control of your phone through secure voice commands. This service can read screen content, perform actions, and control system functions when activated by your authenticated voice.</string>
+    
+    <!-- Permissions -->
+    <string name="permission_microphone_rationale">Microphone access is required for voice recognition and authentication.</string>
+    <string name="permission_phone_rationale">Phone access is required to make calls and read contact information.</string>
+    <string name="permission_sms_rationale">SMS access is required to send text messages via voice commands.</string>
+    <string name="permission_camera_rationale">Camera access is required to take photos via voice commands.</string>
+    <string name="permission_storage_rationale">Storage access is required to save photos and voice profile data.</string>
+    <string name="permission_contacts_rationale">Contacts access is required to call and text people by name.</string>
+    
+    <!-- Voice Recognition -->
+    <string name="wake_word">Hey FreeHands</string>
+    <string name="listening_for_wake_word">Listening for \"Hey FreeHands\"…</string>
+    <string name="voice_auth_prompt">Please speak to authenticate your voice</string>
+    <string name="command_prompt">Speak your command now</string>
+    <string name="processing_command">Processing command…</string>
+    
+    <!-- Commands Help -->
+    <string name="help_commands_title">Available Voice Commands</string>
+    <string name="help_phone_commands">Phone: "Call John", "Dial 555-1234"</string>
+    <string name="help_text_commands">Messages: "Text Mom saying I\'ll be late", "Send SMS to John"</string>
+    <string name="help_camera_commands">Camera: "Take a photo", "Take a selfie"</string>
+    <string name="help_app_commands">Apps: "Open Chrome", "Launch Maps", "Close app"</string>
+    <string name="help_system_commands">System: "Volume up", "Turn on WiFi", "Go home", "Lock phone"</string>
+    <string name="help_info_commands">Information: "What time is it?", "Battery level", "Show notifications"</string>
+    
+    <!-- Error Messages -->
+    <string name="error_permissions_required">All permissions are required for FreeHands to function properly.</string>
+    <string name="error_accessibility_required">Accessibility service must be enabled for system control.</string>
+    <string name="error_voice_auth_failed">Voice authentication failed. Please try again.</string>
+    <string name="error_command_not_recognized">Command not recognized. Say \"Help\" for available commands.</string>
+    <string name="error_microphone_unavailable">Microphone is not available.</string>
+    <string name="error_service_start_failed">Failed to start voice service.</string>
+    
+    <!-- Success Messages -->
+    <string name="success_voice_profile_created">Voice profile created successfully.</string>
+    <string name="success_service_started">FreeHands is now active and listening.</string>
+    <string name="success_command_executed">Command executed successfully.</string>
+    
+    <!-- Notifications -->
+    <string name="notification_title">FreeHands Active</string>
+    <string name="notification_listening">Listening for \"Hey FreeHands\"…</string>
+    <string name="notification_processing">Processing voice command…</string>
+    <string name="notification_authenticated">Voice authenticated - speak your command</string>
+    
+    <!-- Voice Setup -->
+    <string name="voice_setup_title">Voice Authentication Setup</string>
+    <string name="voice_setup_instruction_1">Speak clearly for 3 seconds when prompted</string>
+    <string name="voice_setup_instruction_2">Find a quiet environment</string>
+    <string name="voice_setup_instruction_3">Use your normal speaking voice</string>
+    <string name="voice_setup_sample">Recording voice sample %1$d of %2$d</string>
+    <string name="voice_setup_complete">Voice profile setup complete!</string>
+    
+    <!-- Security Messages -->
+    <string name="security_unauthorized_voice">Unauthorized voice detected - access denied</string>
+    <string name="security_too_many_attempts">Too many failed attempts - temporarily locked</string>
+    <string name="security_device_compromised">Device security may be compromised</string>
+    
+    <!-- Emergency -->
+    <string name="emergency_call_initiated">Emergency call in progress</string>
+    <string name="emergency_help_text">Say \"Emergency\" to call 911</string>
+    
+    <!-- Settings -->
+    <string name="settings_voice_profile">Voice Profile</string>
+    <string name="settings_reset_profile">Reset Voice Profile</string>
+    <string name="settings_security_log">View Security Log</string>
+    <string name="settings_wake_word">Wake Word Settings</string>
+    <string name="settings_command_sensitivity">Command Sensitivity</string>
+    
+    <!-- About -->
+    <string name="about_version">Version 1.0</string>
+    <string name="about_description">FreeHands provides secure, hands-free control of your Android device using voice biometric authentication. All voice processing is done locally on your device for maximum privacy and security.</string>
+    <string name="about_privacy">Your voice patterns never leave your device and are encrypted using military-grade security.</string>
+</resources>

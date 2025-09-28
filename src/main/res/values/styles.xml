@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Application Theme -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here -->
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryDark">@color/primary_dark_color</item>
+        <item name="colorAccent">@color/accent_color</item>
+        <item name="android:windowBackground">@color/background_color</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+    </style>
+
+    <!-- Button Styles -->
+    <style name="ButtonPrimary" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_background</item>
+        <item name="android:textColor">@color/text_on_primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:elevation">2dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+    </style>
+
+    <style name="ButtonSecondary" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_secondary_background</item>
+        <item name="android:textColor">@color/button_secondary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:elevation">1dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+    </style>
+
+    <!-- Text Styles -->
+    <style name="TextTitle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextSubtitle" parent="TextAppearance.AppCompat.Subhead">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextBody" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+
+    <style name="TextCaption" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- Card Styles -->
+    <style name="CardStyle" parent="CardView">
+        <item name="cardCornerRadius">8dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardBackgroundColor">@color/card_background</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+
+    <!-- Status Indicator Styles -->
+    <style name="StatusIndicatorActive">
+        <item name="android:background">@drawable/circle_background</item>
+        <item name="android:backgroundTint">@color/success_color</item>
+        <item name="android:layout_width">12dp</item>
+        <item name="android:layout_height">12dp</item>
+    </style>
+
+    <style name="StatusIndicatorInactive">
+        <item name="android:background">@drawable/circle_background</item>
+        <item name="android:backgroundTint">@color/inactive_color</item>
+        <item name="android:layout_width">12dp</item>
+        <item name="android:layout_height">12dp</item>
+    </style>
+
+    <!-- Voice Activity Styles -->
+    <style name="VoiceActivityListening">
+        <item name="android:background">@drawable/circle_background</item>
+        <item name="android:backgroundTint">@color/listening_color</item>
+    </style>
+
+    <style name="VoiceActivityProcessing">
+        <item name="android:background">@drawable/circle_background</item>
+        <item name="android:backgroundTint">@color/processing_color</item>
+    </style>
+
+    <!-- Security Styles -->
+    <style name="SecurityNotice">
+        <item name="android:background">@drawable/rounded_background</item>
+        <item name="android:backgroundTint">@color/security_notice_bg</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <!-- Accessibility Styles -->
+    <style name="AccessibleText" parent="TextBody">
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+        <item name="android:textColor">@color/high_contrast_text</item>
+    </style>
+
+    <style name="AccessibleButton" parent="ButtonPrimary">
+        <item name="android:minHeight">56dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+</resources>

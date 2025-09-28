@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Colors -->
+    <color name="primary_color">#2196F3</color>
+    <color name="primary_dark_color">#1976D2</color>
+    <color name="primary_light_color">#BBDEFB</color>
+    <color name="accent_color">#FF5722</color>
+    
+    <!-- Secondary Colors -->
+    <color name="secondary_color">#4CAF50</color>
+    <color name="secondary_dark_color">#388E3C</color>
+    <color name="secondary_light_color">#C8E6C9</color>
+    
+    <!-- Background Colors -->
+    <color name="background_color">#FAFAFA</color>
+    <color name="surface_color">#FFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#BDBDBD</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <color name="text_on_secondary">#FFFFFF</color>
+    
+    <!-- Status Colors -->
+    <color name="success_color">#4CAF50</color>
+    <color name="warning_color">#FF9800</color>
+    <color name="error_color">#F44336</color>
+    <color name="info_color">#2196F3</color>
+    
+    <!-- Security Colors -->
+    <color name="security_color">#673AB7</color>
+    <color name="security_notice_bg">#F3E5F5</color>
+    <color name="authenticated_color">#4CAF50</color>
+    <color name="unauthenticated_color">#F44336</color>
+    
+    <!-- Button Colors -->
+    <color name="button_primary">#2196F3</color>
+    <color name="button_primary_pressed">#1976D2</color>
+    <color name="button_secondary">#757575</color>
+    <color name="button_secondary_pressed">#616161</color>
+    <color name="button_disabled">#E0E0E0</color>
+    
+    <!-- Voice Activity Colors -->
+    <color name="listening_color">#4CAF50</color>
+    <color name="speaking_color">#FF9800</color>
+    <color name="processing_color">#2196F3</color>
+    <color name="inactive_color">#9E9E9E</color>
+    
+    <!-- Accessibility Colors -->
+    <color name="high_contrast_text">#000000</color>
+    <color name="high_contrast_background">#FFFFFF</color>
+    
+    <!-- Input colors -->
+    <color name="input_background">#F5F5F5</color>
+    <color name="border_color">#E0E0E0</color>
+    <color name="button_text">#FFFFFF</color>
+    
+    <!-- Notification Colors -->
+    <color name="notification_accent">#2196F3</color>
+    <color name="notification_background">#FFFFFF</color>
+    
+    <!-- Divider Colors -->
+    <color name="divider_color">#E0E0E0</color>
+    <color name="light_divider_color">#F5F5F5</color>
+    
+    <!-- Overlay Colors -->
+    <color name="overlay_dark">#80000000</color>
+    <color name="overlay_light">#4DFFFFFF</color>
+    
+    <!-- Voice Visualization Colors -->
+    <color name="voice_waveform_active">#2196F3</color>
+    <color name="voice_waveform_inactive">#E0E0E0</color>
+    <color name="voice_level_low">#4CAF50</color>
+    <color name="voice_level_medium">#FF9800</color>
+    <color name="voice_level_high">#F44336</color>
+</resources>

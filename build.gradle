@@ -1,0 +1,105 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace "com.freehands.assistant"
+    compileSdkVersion 34
+    buildToolsVersion "34.0.0"
+
+    defaultConfig {
+        applicationId "com.freehands.assistant"
+        minSdkVersion 23
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(project.hasProperty('MY_KEYSTORE_FILE') ? project.property('MY_KEYSTORE_FILE') : 'app/my-release-key.jks')
+            storePassword project.hasProperty('MY_KEYSTORE_PASSWORD') ? project.property('MY_KEYSTORE_PASSWORD') : ''
+            keyAlias project.hasProperty('MY_KEY_ALIAS') ? project.property('MY_KEY_ALIAS') : ''
+            keyPassword project.hasProperty('MY_KEY_PASSWORD') ? project.property('MY_KEY_PASSWORD') : ''
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable false
+        }
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    packagingOptions {
+        pickFirst '**/libc++_shared.so'
+        pickFirst '**/libjsc.so'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // Speech recognition and TTS
+    implementation 'com.google.android.gms:play-services-speech:20.0.0'
+
+    // Biometric authentication
+    implementation 'androidx.biometric:biometric:1.1.0'
+
+    // Voice activity detection and audio processing
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:19.0.0'
+
+    // Security and encryption
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+
+    // Background processing
+    implementation 'androidx.work:work-runtime:2.8.1'
+
+    // Accessibility services
+    implementation 'androidx.core:core:1.10.1'
+
+    // Audio processing libraries
+    implementation 'com.github.wendykierp:JTransforms:3.1'
+
+    // JSON parsing
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Reactive programming
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.6'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+
+    // Testing dependencies
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // Added dependencies for production readiness
+    implementation 'androidx.room:room-runtime:2.5.2'
+    annotationProcessor 'androidx.room:room-compiler:2.5.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.11'
+    implementation 'com.google.firebase:firebase-analytics:21.4.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.7'
+    implementation 'com.google.firebase:firebase-messaging:23.2.0'
+}
