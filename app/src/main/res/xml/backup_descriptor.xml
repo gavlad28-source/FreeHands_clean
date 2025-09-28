@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-descriptor>
+    <!-- Include shared preferences for backup -->
+    <include domain="sharedpref" path="." />
+    
+    <!-- Include databases for backup -->
+    <include domain="database" path="." />
+    
+    <!-- Include files in the files/ directory for backup -->
+    <include domain="file" path="files/" />
+    
+    <!-- Include external files if needed -->
+    <include domain="external" path="." />
+    
+    <!-- Exclude specific files that shouldn't be included in backup -->
+    <exclude domain="sharedpref" path="device.xml" />
+    <exclude domain="database" path="sensitive_data.db" />
+    
+    <!-- Exclude cache and temporary files from backup -->
+    <exclude domain="file" path="cache/" />
+    <exclude domain="file" path="no_backup/" />
+    
+    <!-- Exclude specific shared preferences from backup -->
+    <exclude domain="sharedpref" path="sensitive_prefs.xml" />
+    
+    <!-- Include all other files not explicitly excluded -->
+    <include domain="file" path="." />
+    
+    <!-- Specify the backup agent if using a custom one -->
+    <backup-agent
+        android:name=".backup.AppBackupAgent"
+        android:restoreAnyVersion="true"
+        android:backupInForeground="true" />
+        
+    <!-- Specify the restore rules file -->
+    <restore-at-install-since-or-downgrade
+        android:restoreNeedsApplication="true"
+        android:restoreAnyVersion="true"
+        android:restoreAtInstall="true"
+        android:restoreAtInstallSinceOrDowngrade="true"
+        android:fullBackupOnly="false"
+        android:restoreFullBackup="true"
+        android:restoreSharedPreferences="true"
+        android:restoreDatabase="true"
+        android:restoreFile="true"
+        android:restoreExternalStorage="false" />
+</full-backup-descriptor>

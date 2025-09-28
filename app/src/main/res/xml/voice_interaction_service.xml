@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<voice-interaction-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:recognitionService="com.freehands.assistant.data.service.VoiceAssistantService"
+    android:supportsAssist="true"
+    android:supportsLaunchVoiceAssistFromKeyguard="true"
+    android:supportsLocalInteraction="true"
+    android:supportsAssistHandles="true"
+    android:supportsLaunchVoiceAssistFromKeyguard="true"
+    android:theme="@style/Theme.FreeHands">
+    
+    <recognition-service
+        android:settingsActivity="com.freehands.assistant.presentation.MainActivity"
+        android:supportsOfflineRecognition="true"
+        android:supportsMultipleLanguages="true" />
+        
+</voice-interaction-service>

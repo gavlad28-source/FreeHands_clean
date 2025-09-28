@@ -1,0 +1,150 @@
+<resources>
+    <!-- App Info -->
+    <string name="app_name">FreeHands</string>
+    <string name="app_description">Voice Assistant Application</string>
+    <string name="version_name">Version %1$s</string>
+    
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="done">Done</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="skip">Skip</string>
+    <string name="search">Search</string>
+    <string name="loading">Loading…</string>
+    <string name="error">Error</string>
+    <string name="retry">Retry</string>
+    <string name="success">Success</string>
+    <string name="failed">Failed</string>
+    <string name="unknown_error">An unknown error occurred</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="permission_required">Permission required</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="settings">Settings</string>
+    
+    <!-- Navigation -->
+    <string name="home">Home</string>
+    <string name="commands">Commands</string>
+    <string name="history">History</string>
+    <string name="profile">Profile</string>
+    <string name="settings_title">Settings</string>
+    <string name="about">About</string>
+    <string name="help">Help</string>
+    
+    <!-- Voice Commands -->
+    <string name="voice_command_listening">Listening…</string>
+    <string name="voice_command_processing">Processing…</string>
+    <string name="voice_command_speak_now">Speak now…</string>
+    <string name="voice_command_not_understood">Sorry, I didn\'t understand that</string>
+    <string name="voice_command_tap_to_speak">Tap to speak</string>
+    <string name="voice_command_hold_to_speak">Hold to speak</string>
+    <string name="voice_command_initializing">Initializing voice recognition…</string>
+    <string name="voice_command_error">Voice recognition error</string>
+    <string name="voice_command_no_match">No speech recognized</string>
+    <string name="voice_command_language_not_supported">Language not supported</string>
+    <string name="voice_command_permission_denied">Microphone permission denied</string>
+    
+    <!-- Permissions -->
+    <string name="permission_microphone_title">Microphone Permission</string>
+    <string name="permission_microphone_message">FreeHands needs access to your microphone to listen for voice commands</string>
+    <string name="permission_storage_title">Storage Permission</string>
+    <string name="permission_storage_message">FreeHands needs access to storage to save your preferences and data</string>
+    <string name="permission_contacts_title">Contacts Permission</string>
+    <string name="permission_contacts_message">FreeHands needs access to your contacts to make calls and send messages</string>
+    <string name="permission_phone_title">Phone Permission</string>
+    <string name="permission_phone_message">FreeHands needs phone permissions to make calls</string>
+    <string name="permission_sms_title">SMS Permission</string>
+    <string name="permission_sms_message">FreeHands needs SMS permissions to send messages</string>
+    <string name="permission_location_title">Location Permission</string>
+    <string name="permission_location_message">FreeHands needs location access to provide location-based services</string>
+    
+    <!-- Settings -->
+    <string name="settings_voice">Voice</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_privacy">Privacy</string>
+    <string name="settings_backup">Backup &amp; Sync</string>
+    <string name="settings_about">About</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_voice_language">Voice Language</string>
+    <string name="settings_voice_speed">Voice Speed</string>
+    <string name="settings_voice_pitch">Voice Pitch</string>
+    <string name="settings_wake_word">Wake Word</string>
+    <string name="settings_auto_start">Start on Boot</string>
+    <string name="settings_keep_screen_on">Keep Screen On</string>
+    <string name="settings_show_notifications">Show Notifications</string>
+    <string name="settings_vibrate">Vibrate</string>
+    <string name="settings_sound">Sound</string>
+    <string name="settings_led">LED Notification</string>
+    <string name="settings_privacy_policy">Privacy Policy</string>
+    <string name="settings_terms_of_service">Terms of Service</string>
+    <string name="settings_open_source_licenses">Open Source Licenses</string>
+    <string name="settings_rate_app">Rate App</string>
+    <string name="settings_share_app">Share App</string>
+    <string name="settings_send_feedback">Send Feedback</string>
+    <string name="settings_version">Version %1$s</string>
+    
+    <!-- About -->
+    <string name="about_description">FreeHands is a powerful voice assistant that helps you control your device and get things done with just your voice.</string>
+    <string name="about_developed_by">Developed by FreeHands Team</string>
+    <string name="about_website">Website</string>
+    <string name="about_email">Email</string>
+    <string name="about_facebook">Facebook</string>
+    <string name="about_twitter">Twitter</string>
+    <string name="about_instagram">Instagram</string>
+    <string name="about_github">GitHub</string>
+    
+    <!-- Errors -->
+    <string name="error_network">Network error. Please check your connection and try again.</string>
+    <string name="error_server">Server error. Please try again later.</string>
+    <string name="error_unknown">An unknown error occurred. Please try again.</string>
+    <string name="error_timeout">Request timed out. Please check your connection and try again.</string>
+    <string name="error_no_internet">No internet connection. Please check your connection and try again.</string>
+    
+    <!-- Accessibility Service -->
+    <string name="accessibility_service_description">FreeHands Voice Assistant Service</string>
+    <string name="accessibility_service_settings">Accessibility Settings</string>
+    <string name="accessibility_service_enable">Enable FreeHands in Accessibility Settings to use all features</string>
+    <string name="accessibility_service_enabled">FreeHands is enabled</string>
+    <string name="accessibility_service_disabled">FreeHands is disabled</string>
+    
+    <!-- Voice Interaction Service -->
+    <string name="voice_interaction_service_description">FreeHands Voice Interaction Service</string>
+    
+    <!-- Notification Channels -->
+    <string name="notification_channel_voice_commands">Voice Commands</string>
+    <string name="notification_channel_voice_commands_description">Notifications for voice command processing</string>
+    <string name="notification_channel_service">Background Service</string>
+    <string name="notification_channel_service_description">Notifications for background services</string>
+    
+    <!-- Days of Week -->
+    <string-array name="days_of_week">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
+    
+    <!-- Months -->
+    <string-array name="months">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+</resources>

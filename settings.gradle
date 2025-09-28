@@ -1,0 +1,52 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    
+    resolutionStrategy {
+        eachPlugin {
+            // Define plugin versions here if needed
+        }
+    }
+}
+
+// Project configuration
+rootProject.name = "FreeHands"
+
+// Include the app module
+include ':app'
+
+// Configure build cache (optional)
+buildCache {
+    local {
+        // Local build cache configuration
+        enabled = true
+    }
+    local {
+        // Local build cache configuration
+        enabled = true
+        // Directory to store the cache
+        directory = new File(rootDir, 'build-cache')
+        // Remove unused entries after 7 days
+        removeUnusedEntriesAfterDays = 7
+    }
+}
+
+// Configure all projects
+gradle.allprojects { project ->
+    // Apply common configuration to all projects
+    project.plugins.withId('java') {
+        // Java-specific configuration
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    
+    // Common repository configuration
+    project.repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<voice-interaction-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:sessionService="com.freehands.assistant.VoiceInteractionService"
+    android:recognitionService="com.freehands.assistant.VoiceListeningService"
+    android:supportsAssist="true"
+    android:supportsLaunchVoiceAssistFromKeyguard="true"
+    android:supportsLocalInteraction="true"
+    android:supportsAssistHandles="true"
+    android:supportsAssistScreenshot="true"
+    android:supportsAssistWebUri="true"
+    android:label="@string/app_name"
+    android:description="@string/voice_interaction_service_description"
+    android:icon="@mipmap/ic_launcher"
+    android:logo="@mipmap/ic_launcher"
+    android:settingsActivity="com.freehands.assistant.SettingsActivity"
+    android:theme="@style/Theme.FreeHands"
+    android:supportsLaunchVoiceAssistFromKeyguard="true">
+    
+    <!-- Intent that is triggered when the service is started from the keyguard -->
+    <intent-filter>
+        <action android:name="android.service.voice.VoiceInteractionService" />
+        <category android:name="android.intent.category.DEFAULT" />
+    </intent-filter>
+    
+</voice-interaction-service>

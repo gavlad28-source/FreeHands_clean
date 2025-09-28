@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spacing -->
+    <dimen name="spacing_none">0dp</dimen>
+    <dimen name="spacing_extra_tiny">2dp</dimen>
+    <dimen name="spacing_tiny">4dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_medium">12dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_extra_large">24dp</dimen>
+    <dimen name="spacing_huge">32dp</dimen>
+    <dimen name="spacing_massive">48dp</dimen>
+    
+    <!-- Text Sizes -->
+    <dimen name="text_size_extra_small">10sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_large">16sp</dimen>
+    <dimen name="text_size_extra_large">18sp</dimen>
+    <dimen name="text_size_display1">20sp</dimen>
+    <dimen name="text_size_display2">24sp</dimen>
+    <dimen name="text_size_display3">34sp</dimen>
+    <dimen name="text_size_display4">48sp</dimen>
+    
+    <!-- Button Sizes -->
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="button_padding_horizontal">24dp</dimen>
+    <dimen name="button_padding_vertical">12dp</dimen>
+    <dimen name="button_radius">24dp</dimen>
+    
+    <!-- Input Field Sizes -->
+    <dimen name="input_field_height">56dp</dimen>
+    <dimen name="input_field_padding">16dp</dimen>
+    <dimen name="input_field_radius">4dp</dimen>
+    <dimen name="input_field_text_size">16sp</dimen>
+    
+    <!-- Card Sizes -->
+    <dimen name="card_elevation">2dp</dimen>
+    <dimen name="card_radius">8dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+    
+    <!-- Icon Sizes -->
+    <dimen name="icon_size_tiny">16dp</dimen>
+    <dimen name="icon_size_small">20dp</dimen>
+    <dimen name="icon_size_medium">24dp</dimen>
+    <dimen name="icon_size_large">32dp</dimen>
+    <dimen name="icon_size_extra_large">48dp</dimen>
+    
+    <!-- Avatar Sizes -->
+    <dimen name="avatar_size_small">32dp</dimen>
+    <dimen name="avatar_size_medium">48dp</dimen>
+    <dimen name="avatar_size_large">64dp</dimen>
+    <dimen name="avatar_size_extra_large">96dp</dimen>
+    
+    <!-- Dialog Sizes -->
+    <dimen name="dialog_min_width">280dp</dimen>
+    <dimen name="dialog_max_width">560dp</dimen>
+    <dimen name="dialog_padding">24dp</dimen>
+    
+    <!-- Divider Sizes -->
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="divider_padding">16dp</dimen>
+    
+    <!-- Toolbar Sizes -->
+    <dimen name="toolbar_height">?attr/actionBarSize</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="toolbar_padding">16dp</dimen>
+    
+    <!-- Tab Layout Sizes -->
+    <dimen name="tab_indicator_height">2dp</dimen>
+    <dimen name="tab_padding">12dp</dimen>
+    <dimen name="tab_min_width">90dp</dimen>
+    
+    <!-- Bottom Navigation Sizes -->
+    <dimen name="bottom_nav_height">56dp</dimen>
+    <dimen name="bottom_nav_icon_size">24dp</dimen>
+    <dimen name="bottom_nav_text_size">12sp</dimen>
+    <dimen name="bottom_nav_elevation">8dp</dimen>
+    
+    <!-- Floating Action Button Sizes -->
+    <dimen name="fab_size_normal">56dp</dimen>
+    <dimen name="fab_size_mini">40dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_elevation">6dp</dimen>
+    
+    <!-- Progress Bar Sizes -->
+    <dimen name="progress_bar_size">48dp</dimen>
+    <dimen name="progress_bar_stroke_width">4dp</dimen>
+    
+    <!-- Chip Sizes -->
+    <dimen name="chip_height">32dp</dimen>
+    <dimen name="chip_padding">8dp</dimen>
+    <dimen name="chip_corner_radius">16dp</dimen>
+    <dimen name="chip_icon_size">18dp</dimen>
+    
+    <!-- Spacing for voice command UI -->
+    <dimen name="voice_command_margin">24dp</dimen>
+    <dimen name="voice_command_circle_size">200dp</dimen>
+    <dimen name="voice_command_ripple_size">300dp</dimen>
+    <dimen name="voice_command_text_size">18sp</dimen>
+    <dimen name="voice_command_hint_text_size">14sp</dimen>
+</resources>

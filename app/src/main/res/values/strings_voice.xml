@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Voice Interaction Service -->
+    <string name="voice_command_service">FreeHands Voice Command Service</string>
+    <string name="voice_interaction_service">FreeHands Voice Interaction</string>
+    <string name="title_activity_settings">Settings</string>
+    
+    <!-- Voice Interaction UI -->
+    <string name="voice_interaction_title">FreeHands Assistant</string>
+    <string name="voice_interaction_subtitle">Voice Commands</string>
+    <string name="voice_interaction_hint">Say a command or ask a question</string>
+    <string name="voice_interaction_hint_action">Tap to speak</string>
+    <string name="voice_interaction_search_hint">Search or speak command</string>
+    <string name="voice_interaction_search_button">Voice search</string>
+    <string name="voice_interaction_search_tooltip">Tap and hold to speak</string>
+    
+    <!-- Command Responses -->
+    <string name="command_not_recognized">I didn\'t understand that command. Please try again.</string>
+    <string name="command_processing">Processing your request…</string>
+    <string name="command_confirmation">Did you say \"%1$s\"?</string>
+    <string name="confirmation_yes">Yes</string>
+    <string name="confirmation_no">No</string>
+    <string name="confirmation_required">Confirmation required</string>
+    
+    <!-- Biometric Authentication -->
+    <string name="biometric_auth_required">Authentication required to continue</string>
+    <string name="biometric_auth_failed">Authentication failed. Please try again.</string>
+    <string name="biometric_not_available">Biometric authentication is not available on this device.</string>
+    <string name="biometric_error_hardware_not_present">No biometric hardware available on this device.</string>
+    
+    <!-- Permissions -->
+    <string name="permission_microphone_required">Microphone permission is required for voice commands.</string>
+    <string name="permission_storage_required">Storage permission is required to save command history.</string>
+    <string name="permission_contacts_required">Contacts permission is required for calling and messaging.</string>
+    
+    <!-- Command Categories -->
+    <string-array name="command_categories">
+        <item>Calling</item>
+        <item>Messaging</item>
+        <item>Navigation</item>
+        <item>Media</item>
+        <item>Settings</item>
+        <item>System</item>
+    </string-array>
+    
+    <!-- Default Commands -->
+    <string-array name="default_commands">
+        <item>Call [contact]</item>
+        <item>Message [contact] [message]</item>
+        <item>Navigate to [location]</item>
+        <item>Play [song/artist/playlist]</item>
+        <item>Turn on/off [wifi/bluetooth]</item>
+        <item>Set alarm for [time]</item>
+        <item>Set timer for [duration]</item>
+        <item>What can you do?</item>
+    </string-array>
+</resources>
