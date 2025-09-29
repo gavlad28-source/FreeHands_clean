@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<full-backup-descriptor>
+<full-backup-descriptor xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Include shared preferences for backup -->
     <include domain="sharedpref" path="." />
     
@@ -36,12 +36,5 @@
     <restore-at-install-since-or-downgrade
         android:restoreNeedsApplication="true"
         android:restoreAnyVersion="true"
-        android:restoreAtInstall="true"
-        android:restoreAtInstallSinceOrDowngrade="true"
-        android:fullBackupOnly="false"
-        android:restoreFullBackup="true"
-        android:restoreSharedPreferences="true"
-        android:restoreDatabase="true"
-        android:restoreFile="true"
-        android:restoreExternalStorage="false" />
+        android:fullBackupOnly="false" />
 </full-backup-descriptor>

@@ -65,10 +65,6 @@ abstract class AppDatabase : RoomDatabase() {
                         }
                     }
                 })
-                .addMigrations(
-                    // Add migrations here when the database schema changes
-                    // Example: MIGRATION_1_2, MIGRATION_2_3, etc.
-                )
                 .fallbackToDestructiveMigration() // For development only - remove in production
                 .build()
                 
@@ -143,11 +139,6 @@ abstract class AppDatabase : RoomDatabase() {
             // Only insert if the database is empty
             if (dao.getCommandCount() == 0) {
                 dao.insertAll(defaultCommands)
-            }
-        }
-                
-                INSTANCE = instance
-                instance
             }
         }
     }

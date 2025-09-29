@@ -1,67 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Primary colors -->
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!-- Primary Colors -->
+    <color name="primary_color">#2196F3</color>
+    <color name="primary_dark_color">#1976D2</color>
+    <color name="primary_light_color">#BBDEFB</color>
+    <color name="accent_color">#FF5722</color>
     
-    <!-- Basic colors -->
+    <!-- Secondary Colors -->
+    <color name="secondary_color">#4CAF50</color>
+    <color name="secondary_dark_color">#388E3C</color>
+    <color name="secondary_light_color">#C8E6C9</color>
+    
+    <!-- Background Colors -->
+    <color name="background_color">#FAFAFA</color>
+    <color name="surface_color">#FFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#212121</color>
+    
+    <!-- Missing colors from Material Design -->
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="teal_700">#018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="dark_surface">#121212</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#BDBDBD</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <color name="text_on_secondary">#FFFFFF</color>
     
-    <!-- Text colors -->
-    <color name="text_primary">#DE000000</color>
-    <color name="text_secondary">#8A000000</color>
-    <color name="text_hint">#61000000</color>
-    <color name="text_primary_dark">#DEFFFFFF</color>
-    <color name="text_secondary_dark">#8AFFFFFF</color>
-    <color name="text_hint_dark">#61FFFFFF</color>
+    <!-- Status Colors -->
+    <color name="success_color">#4CAF50</color>
+    <color name="warning_color">#FF9800</color>
+    <color name="error_color">#F44336</color>
+    <color name="info_color">#2196F3</color>
     
-    <!-- Background colors -->
-    <color name="background">#FFF5F5F5</color>
-    <color name="background_dark">#FF121212</color>
-    <color name="surface">#FFFFFFFF</color>
-    <color name="dark_surface">#FF1E1E1E</color>
+    <!-- Security Colors -->
+    <color name="security_color">#673AB7</color>
+    <color name="security_notice_bg">#F3E5F5</color>
+    <color name="authenticated_color">#4CAF50</color>
+    <color name="unauthenticated_color">#F44336</color>
     
-    <!-- Status bar colors -->
-    <color name="status_bar_light">#1F000000</color>
-    <color name="status_bar_dark">#1FFFFFFF</color>
+    <!-- Button Colors -->
+    <color name="button_primary">#2196F3</color>
+    <color name="button_primary_pressed">#1976D2</color>
+    <color name="button_secondary">#757575</color>
+    <color name="button_secondary_pressed">#616161</color>
+    <color name="button_disabled">#E0E0E0</color>
     
-    <!-- Common colors -->
-    <color name="red">#FF5252</color>
-    <color name="pink">#FF4081</color>
-    <color name="purple">#E040FB</color>
-    <color name="deep_purple">#7C4DFF</color>
-    <color name="indigo">#536DFE</color>
-    <color name="blue">#448AFF</color>
-    <color name="light_blue">#40C4FF</color>
-    <color name="cyan">#18FFFF</color>
-    <color name="teal">#64FFDA</color>
-    <color name="green">#69F0AE</color>
-    <color name="light_green">#B2FF59</color>
-    <color name="lime">#EEFF41</color>
-    <color name="yellow">#FFFF00</color>
-    <color name="amber">#FFD740</color>
-    <color name="orange">#FFAB40</color>
-    <color name="deep_orange">#FF6E40</color>
-    <color name="brown">#8D6E63</color>
-    <color name="grey">#9E9E9E</color>
-    <color name="blue_grey">#607D8B</color>
+    <!-- Voice Activity Colors -->
+    <color name="listening_color">#4CAF50</color>
+    <color name="speaking_color">#FF9800</color>
+    <color name="processing_color">#2196F3</color>
+    <color name="inactive_color">#9E9E9E</color>
     
-    <!-- Transparent colors -->
-    <color name="transparent">#00000000</color>
-    <color name="semi_transparent_black">#80000000</color>
-    <color name="semi_transparent_white">#80FFFFFF</color>
+    <!-- Accessibility Colors -->
+    <color name="high_contrast_text">#000000</color>
+    <color name="high_contrast_background">#FFFFFF</color>
     
-    <!-- Custom colors -->
-    <color name="colorAccent">@color/teal_200</color>
-    <color name="colorPrimary">@color/purple_500</color>
-    <color name="colorPrimaryDark">@color/purple_700</color>
-    <color name="colorControlNormal">@color/black</color>
-    <color name="colorControlActivated">@color/teal_200</color>
-    <color name="colorControlHighlight">#1F000000</color>
-    <color name="colorButtonNormal">@color/teal_200</color>
-    <color name="switch_thumb_normal">@color/grey</color>
+    <!-- Input colors -->
+    <color name="input_background">#F5F5F5</color>
+    <color name="border_color">#E0E0E0</color>
+    <color name="button_text">#FFFFFF</color>
+    
+    <!-- Notification Colors -->
+    <color name="notification_accent">#2196F3</color>
+    <color name="notification_background">#FFFFFF</color>
+    
+    <!-- Divider Colors -->
+    <color name="divider_color">#E0E0E0</color>
+    <color name="light_divider_color">#F5F5F5</color>
+    
+    <!-- Overlay Colors -->
+    <color name="overlay_dark">#80000000</color>
+    <color name="overlay_light">#4DFFFFFF</color>
+    
+    <!-- Voice Visualization Colors -->
+    <color name="voice_waveform_active">#2196F3</color>
+    <color name="voice_waveform_inactive">#E0E0E0</color>
+    <color name="voice_level_low">#4CAF50</color>
+    <color name="voice_level_medium">#FF9800</color>
+    <color name="voice_level_high">#F44336</color>
 </resources>

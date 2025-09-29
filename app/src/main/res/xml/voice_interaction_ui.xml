@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<voice-interaction-service xmlns:android="http://schemas.android.com/apk/res/android"
+<voice-interaction-service 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:theme="@style/Theme.FreeHands.Voice"
     android:recognitionService="com.freehands.assistant.service.CustomSpeechRecognitionService"
     android:supportsAssist="true"
-    android:supportsLaunchVoiceAssistFromKeyguard="true"
-    android:supportsLocalInteraction="true"
-    android:supportsAssistScreenshot="true"
-    android:supportsAssistWebUri="true"
-    android:supportsLaunchVoiceAssistFromKeyguard="true"
-    android:supportsAssistContent="true"
-    android:supportsAssistDataReceiver="true" />
+    android:supportsLaunchVoiceAssistFromKeyguard="true" />

@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<recognition-service xmlns:android="http://schemas.android.com/apk/res/android"
-    android:settingsActivity="com.freehands.assistant.ui.settings.SpeechRecognitionSettingsActivity"
-    android:supportsSwitchingRecognizer="true"
-    android:supportsWebSearchResults="true"
-    android:supportsMultipleLanguages="true"
-    android:supportsOnDeviceRecognition="true"
-    android:supportsOnDeviceLanguageDetection="true" />
+<recognition-service 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:settingsActivity="com.freehands.assistant.ui.settings.SpeechRecognitionSettingsActivity" />

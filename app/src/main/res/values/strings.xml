@@ -1,150 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- App Info -->
-    <string name="app_name">FreeHands</string>
-    <string name="app_description">Voice Assistant Application</string>
-    <string name="version_name">Version %1$s</string>
+    <!-- App Information -->
+    <string name="app_name">FreeHands Voice Assistant</string>
+    <string name="app_subtitle">Secure hands-free phone control with voice biometrics</string>
     
-    <!-- Common -->
-    <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
-    <string name="save">Save</string>
-    <string name="delete">Delete</string>
-    <string name="edit">Edit</string>
-    <string name="done">Done</string>
-    <string name="next">Next</string>
-    <string name="back">Back</string>
-    <string name="skip">Skip</string>
-    <string name="search">Search</string>
-    <string name="loading">Loading…</string>
-    <string name="error">Error</string>
-    <string name="retry">Retry</string>
-    <string name="success">Success</string>
-    <string name="failed">Failed</string>
-    <string name="unknown_error">An unknown error occurred</string>
-    <string name="no_internet_connection">No internet connection</string>
-    <string name="permission_required">Permission required</string>
-    <string name="permission_denied">Permission denied</string>
-    <string name="settings">Settings</string>
+    <!-- Main Activity -->
+    <string name="status_title">Service Status</string>
+    <string name="status_initial">FreeHands is not active. Complete setup to begin hands-free control.</string>
+    <string name="setup_button_text">Setup &amp; Start FreeHands</string>
+    <string name="setup_instructions">Grant all permissions and enable accessibility service for full hands-free control. Your voice will be securely authenticated before each command.</string>
     
-    <!-- Navigation -->
-    <string name="home">Home</string>
-    <string name="commands">Commands</string>
-    <string name="history">History</string>
-    <string name="profile">Profile</string>
-    <string name="settings_title">Settings</string>
-    <string name="about">About</string>
-    <string name="help">Help</string>
-    
-    <!-- Voice Commands -->
-    <string name="voice_command_listening">Listening…</string>
-    <string name="voice_command_processing">Processing…</string>
-    <string name="voice_command_speak_now">Speak now…</string>
-    <string name="voice_command_not_understood">Sorry, I didn\'t understand that</string>
-    <string name="voice_command_tap_to_speak">Tap to speak</string>
-    <string name="voice_command_hold_to_speak">Hold to speak</string>
-    <string name="voice_command_initializing">Initializing voice recognition…</string>
-    <string name="voice_command_error">Voice recognition error</string>
-    <string name="voice_command_no_match">No speech recognized</string>
-    <string name="voice_command_language_not_supported">Language not supported</string>
-    <string name="voice_command_permission_denied">Microphone permission denied</string>
-    
-    <!-- Permissions -->
-    <string name="permission_microphone_title">Microphone Permission</string>
-    <string name="permission_microphone_message">FreeHands needs access to your microphone to listen for voice commands</string>
-    <string name="permission_storage_title">Storage Permission</string>
-    <string name="permission_storage_message">FreeHands needs access to storage to save your preferences and data</string>
-    <string name="permission_contacts_title">Contacts Permission</string>
-    <string name="permission_contacts_message">FreeHands needs access to your contacts to make calls and send messages</string>
-    <string name="permission_phone_title">Phone Permission</string>
-    <string name="permission_phone_message">FreeHands needs phone permissions to make calls</string>
-    <string name="permission_sms_title">SMS Permission</string>
-    <string name="permission_sms_message">FreeHands needs SMS permissions to send messages</string>
-    <string name="permission_location_title">Location Permission</string>
-    <string name="permission_location_message">FreeHands needs location access to provide location-based services</string>
-    
-    <!-- Settings -->
-    <string name="settings_voice">Voice</string>
-    <string name="settings_notifications">Notifications</string>
-    <string name="settings_privacy">Privacy</string>
-    <string name="settings_backup">Backup &amp; Sync</string>
-    <string name="settings_about">About</string>
-    <string name="settings_theme">Theme</string>
-    <string name="settings_language">Language</string>
-    <string name="settings_voice_language">Voice Language</string>
-    <string name="settings_voice_speed">Voice Speed</string>
-    <string name="settings_voice_pitch">Voice Pitch</string>
-    <string name="settings_wake_word">Wake Word</string>
-    <string name="settings_auto_start">Start on Boot</string>
-    <string name="settings_keep_screen_on">Keep Screen On</string>
-    <string name="settings_show_notifications">Show Notifications</string>
-    <string name="settings_vibrate">Vibrate</string>
-    <string name="settings_sound">Sound</string>
-    <string name="settings_led">LED Notification</string>
-    <string name="settings_privacy_policy">Privacy Policy</string>
-    <string name="settings_terms_of_service">Terms of Service</string>
-    <string name="settings_open_source_licenses">Open Source Licenses</string>
-    <string name="settings_rate_app">Rate App</string>
-    <string name="settings_share_app">Share App</string>
-    <string name="settings_send_feedback">Send Feedback</string>
-    <string name="settings_version">Version %1$s</string>
-    
-    <!-- About -->
-    <string name="about_description">FreeHands is a powerful voice assistant that helps you control your device and get things done with just your voice.</string>
-    <string name="about_developed_by">Developed by FreeHands Team</string>
-    <string name="about_website">Website</string>
-    <string name="about_email">Email</string>
-    <string name="about_facebook">Facebook</string>
-    <string name="about_twitter">Twitter</string>
-    <string name="about_instagram">Instagram</string>
-    <string name="about_github">GitHub</string>
-    
-    <!-- Errors -->
-    <string name="error_network">Network error. Please check your connection and try again.</string>
-    <string name="error_server">Server error. Please try again later.</string>
-    <string name="error_unknown">An unknown error occurred. Please try again.</string>
-    <string name="error_timeout">Request timed out. Please check your connection and try again.</string>
-    <string name="error_no_internet">No internet connection. Please check your connection and try again.</string>
+    <!-- Security -->
+    <string name="security_notice">Your voice patterns are encrypted and stored locally on your device for security.</string>
+    <string name="security_icon_desc">Security shield icon</string>
     
     <!-- Accessibility Service -->
-    <string name="accessibility_service_description">FreeHands Voice Assistant Service</string>
-    <string name="accessibility_service_settings">Accessibility Settings</string>
-    <string name="accessibility_service_enable">Enable FreeHands in Accessibility Settings to use all features</string>
-    <string name="accessibility_service_enabled">FreeHands is enabled</string>
-    <string name="accessibility_service_disabled">FreeHands is disabled</string>
-    
-    <!-- Voice Interaction Service -->
+    <string name="accessibility_service_description">FreeHands Voice Assistant uses accessibility services to provide hands-free control of your phone through secure voice commands. This service can read screen content, perform actions, and control system functions when activated by your authenticated voice.</string>
+    <string name="voice_assistant_service">FreeHands Voice Assistant</string>
     <string name="voice_interaction_service_description">FreeHands Voice Interaction Service</string>
     
-    <!-- Notification Channels -->
-    <string name="notification_channel_voice_commands">Voice Commands</string>
-    <string name="notification_channel_voice_commands_description">Notifications for voice command processing</string>
-    <string name="notification_channel_service">Background Service</string>
-    <string name="notification_channel_service_description">Notifications for background services</string>
+    <!-- Permissions -->
+    <string name="permission_microphone_rationale">Microphone access is required for voice recognition and authentication.</string>
+    <string name="permission_phone_rationale">Phone access is required to make calls and read contact information.</string>
+    <string name="permission_sms_rationale">SMS access is required to send text messages via voice commands.</string>
+    <string name="permission_camera_rationale">Camera access is required to take photos via voice commands.</string>
+    <string name="permission_storage_rationale">Storage access is required to save photos and voice profile data.</string>
+    <string name="permission_contacts_rationale">Contacts access is required to call and text people by name.</string>
     
-    <!-- Days of Week -->
-    <string-array name="days_of_week">
-        <item>Sunday</item>
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-    </string-array>
+    <!-- Voice Recognition -->
+    <string name="wake_word">Hey FreeHands</string>
+    <string name="listening_for_wake_word">Listening for \"Hey FreeHands\"…</string>
+    <string name="voice_auth_prompt">Please speak to authenticate your voice</string>
+    <string name="command_prompt">Speak your command now</string>
+    <string name="processing_command">Processing command…</string>
     
-    <!-- Months -->
-    <string-array name="months">
-        <item>January</item>
-        <item>February</item>
-        <item>March</item>
-        <item>April</item>
-        <item>May</item>
-        <item>June</item>
-        <item>July</item>
-        <item>August</item>
-        <item>September</item>
-        <item>October</item>
-        <item>November</item>
-        <item>December</item>
-    </string-array>
+    <!-- Commands Help -->
+    <string name="help_commands_title">Available Voice Commands</string>
+    <string name="help_phone_commands">Phone: "Call John", "Dial 555-1234"</string>
+    <string name="help_text_commands">Messages: "Text Mom saying I\'ll be late", "Send SMS to John"</string>
+    <string name="help_camera_commands">Camera: "Take a photo", "Take a selfie"</string>
+    <string name="help_app_commands">Apps: "Open Chrome", "Launch Maps", "Close app"</string>
+    <string name="help_system_commands">System: "Volume up", "Turn on WiFi", "Go home", "Lock phone"</string>
+    <string name="help_info_commands">Information: "What time is it?", "Battery level", "Show notifications"</string>
+    
+    <!-- Error Messages -->
+    <string name="error_permissions_required">All permissions are required for FreeHands to function properly.</string>
+    <string name="error_accessibility_required">Accessibility service must be enabled for system control.</string>
+    <string name="error_voice_auth_failed">Voice authentication failed. Please try again.</string>
+    <string name="error_command_not_recognized">Command not recognized. Say \"Help\" for available commands.</string>
+    <string name="error_microphone_unavailable">Microphone is not available.</string>
+    <string name="error_service_start_failed">Failed to start voice service.</string>
+    
+    <!-- Success Messages -->
+    <string name="success_voice_profile_created">Voice profile created successfully.</string>
+    <string name="success_service_started">FreeHands is now active and listening.</string>
+    <string name="success_command_executed">Command executed successfully.</string>
+    
+    <!-- Notifications -->
+    <string name="notification_title">FreeHands Active</string>
+    <string name="notification_listening">Listening for \"Hey FreeHands\"…</string>
+    <string name="notification_processing">Processing voice command…</string>
+    <string name="notification_authenticated">Voice authenticated - speak your command</string>
+    
+    <!-- Voice Setup -->
+    <string name="voice_setup_title">Voice Authentication Setup</string>
+    <string name="voice_setup_instruction_1">Speak clearly for 3 seconds when prompted</string>
+    <string name="voice_setup_instruction_2">Find a quiet environment</string>
+    <string name="voice_setup_instruction_3">Use your normal speaking voice</string>
+    <string name="voice_setup_sample">Recording voice sample %1$d of %2$d</string>
+    <string name="voice_setup_complete">Voice profile setup complete!</string>
+    
+    <!-- Security Messages -->
+    <string name="security_unauthorized_voice">Unauthorized voice detected - access denied</string>
+    <string name="security_too_many_attempts">Too many failed attempts - temporarily locked</string>
+    <string name="security_device_compromised">Device security may be compromised</string>
+    
+    <!-- Emergency -->
+    <string name="emergency_call_initiated">Emergency call in progress</string>
+    <string name="emergency_help_text">Say \"Emergency\" to call 911</string>
+    
+    <!-- Settings -->
+    <string name="settings_voice_profile">Voice Profile</string>
+    <string name="settings_reset_profile">Reset Voice Profile</string>
+    <string name="settings_security_log">View Security Log</string>
+    <string name="settings_wake_word">Wake Word Settings</string>
+    <string name="settings_command_sensitivity">Command Sensitivity</string>
+    
+    <!-- About -->
+    <string name="about_version">Version 1.0</string>
+    <string name="about_description">FreeHands provides secure, hands-free control of your Android device using voice biometric authentication. All voice processing is done locally on your device for maximum privacy and security.</string>
+    <string name="about_privacy">Your voice patterns never leave your device and are encrypted using military-grade security.</string>
 </resources>

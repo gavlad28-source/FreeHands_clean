@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <!-- Base configuration: All cleartext traffic is disallowed by default -->
+    <!-- Base configuration for API 23+ -->
     <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="system" />
             <certificates src="user" />
         </trust-anchors>
     </base-config>
-
-    <!-- Debug configuration: Allows cleartext traffic for debug builds -->
+    
+    <!-- Debug configuration for development -->
     <debug-overrides>
         <trust-anchors>
             <certificates src="system" />
             <certificates src="user" />
         </trust-anchors>
     </debug-overrides>
-
-    <!-- Domain-specific configuration if needed -->
-    <domain-config cleartextTrafficPermitted="false">
-        <domain includeSubdomains="true">api.freehands.com</domain>
-        <domain includeSubdomains="true">storage.freehands.com</domain>
-    </domain-config>
 </network-security-config>

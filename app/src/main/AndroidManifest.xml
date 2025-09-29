@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.freehands.assistant">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Required for voice recognition -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -32,6 +31,10 @@
     <!-- Accessibility service for better integration -->
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" 
         tools:ignore="ProtectedPermissions" />
+    
+    <!-- Required for system settings changes -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
         
     <!-- Required features -->
     <uses-feature
@@ -41,31 +44,6 @@
     <uses-feature
         android:name="android.software.voice_recognizers"
         android:required="true" />
-
-    <!-- Internet permissions (for online features) -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    
-    <!-- Audio recording permissions -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    
-    <!-- Foreground service permissions -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
-    
-    <!-- Boot completed receiver permission -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    
-    <!-- Required for offline speech recognition -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    
-    <!-- Required for some system settings changes -->
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
 
     <application
         android:name=".FreeHandsApp"

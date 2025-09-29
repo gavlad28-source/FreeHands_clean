@@ -2,17 +2,27 @@
     <!-- Base application theme. -->
     <style name="Theme.FreeHands" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryVariant">@color/primary_dark_color</item>
         <item name="colorOnPrimary">@color/white</item>
         
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/secondary_color</item>
+        <item name="colorSecondaryVariant">@color/secondary_dark_color</item>
+        <item name="colorOnSecondary">@color/white</item>
+        
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/background_color</item>
+        <item name="colorSurface">@color/surface_color</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
         
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:windowLightStatusBar">false</item>
         
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
@@ -23,9 +33,26 @@
         <!-- Material Components -->
         <item name="materialButtonStyle">@style/Widget.FreeHands.Button</item>
         <item name="textInputStyle">@style/Widget.FreeHands.TextInputLayout</item>
-        
-        <!-- Custom attributes -->
         <item name="cardViewStyle">@style/Widget.FreeHands.CardView</item>
+        
+        <!-- Material Components attributes -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.FreeHands.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.FreeHands.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.FreeHands.LargeComponent</item>
+        
+        <!-- Text input layout style -->
+        <item name="textInputStyle">@style/Widget.FreeHands.TextInputLayout</item>
+        <item name="materialButtonStyle">@style/Widget.FreeHands.Button</item>
+        <item name="cardViewStyle">@style/Widget.FreeHands.CardView</item>
+    </style>
+    
+    <!-- Voice Interaction Theme -->
+    <style name="Theme.FreeHands.Voice" parent="Theme.FreeHands">
+        <item name="android:windowBackground">@color/background_color</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
     
     <!-- Light Theme -->

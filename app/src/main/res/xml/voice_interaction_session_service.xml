@@ -1,18 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<voice-interaction-session-service xmlns:android="http://schemas.android.com/apk/res/android"
-    android:sessionTheme="@style/Theme.FreeHands.Voice"
-    android:sessionUiEnabled="true"
-    android:sessionUiTitle="@string/voice_interaction_title"
-    android:sessionUiSubtitle="@string/voice_interaction_subtitle"
-    android:sessionUiHintText="@string/voice_interaction_hint"
-    android:sessionUiHintActionLabel="@string/voice_interaction_hint_action"
-    android:sessionUiSearchEnabled="true"
-    android:sessionUiSearchLabel="@string/voice_interaction_search_hint"
-    android:sessionUiSearchButtonIcon="@drawable/ic_mic"
-    android:sessionUiSearchButtonContentDescription="@string/voice_interaction_search_button"
-    android:sessionUiSearchButtonTooltip="@string/voice_interaction_search_tooltip"
-    android:sessionUiSearchButtonAccessibilityLiveRegion="polite"
-    android:sessionUiSearchButtonFocusable="true"
-    android:sessionUiSearchButtonClickable="true"
-    android:sessionUiSearchButtonLongClickable="true"
-    android:sessionUiSearchButtonContextClickable="true" />
+<voice-interaction-session-service 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="@style/Theme.FreeHands.Voice" />
