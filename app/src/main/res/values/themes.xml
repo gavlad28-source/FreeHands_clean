@@ -46,6 +46,12 @@
         <item name="cardViewStyle">@style/Widget.FreeHands.CardView</item>
     </style>
     
+    <!-- No Action Bar Theme -->
+    <style name="Theme.FreeHands.NoActionBar" parent="Theme.FreeHands">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    
     <!-- Voice Interaction Theme -->
     <style name="Theme.FreeHands.Voice" parent="Theme.FreeHands">
         <item name="android:windowBackground">@color/background_color</item>

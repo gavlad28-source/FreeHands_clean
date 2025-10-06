@@ -1,8 +1,11 @@
 #include "audio_processing.h"
 #include <cmath>
-#include <arm_neon.h>
 #include <vector>
 #include <algorithm>
+
+#if HAVE_NEON
+#include <arm_neon.h>
+#endif
 
 // Constants for audio processing
 constexpr float PI = 3.14159265358979323846f;
@@ -23,6 +26,7 @@ static inline float fast_log10(float x) {
     return fast_log2(x) * 0.3010299956639812f; // log10(2)
 }
 
+#if HAVE_NEON
 // NEON-optimized exponential function
 static inline float32x4_t exp_ps(float32x4_t x) {
     // Implementation of exp using Taylor series approximation
@@ -44,7 +48,14 @@ static inline float32x4_t exp_ps(float32x4_t x) {
     
     return result;
 }
+#else
+// Fallback implementation for non-NEON
+static inline float exp_ps(float x) {
+    return expf(x);
+}
+#endif
 
+#if HAVE_NEON
 // NEON-optimized sine function
 static inline float32x4_t sin_ps(float32x4_t x) {
     // Normalize x to [-π, π]
@@ -78,20 +89,52 @@ static inline float32x4_t sin_ps(float32x4_t x) {
     
     return result;
 }
+#else
+// Fallback implementation for non-NEON
+static inline float sin_ps(float x) {
+    // Wrap x to [-π, π]
+    x = fmodf(x + M_PI, 2.0f * M_PI);
+    if (x < 0) x += 2.0f * M_PI;
+    x -= M_PI;
+    
+    // 7th order Taylor series approximation
+    float x2 = x * x;
+    float x3 = x * x2;
+    float x5 = x3 * x2;
+    float x7 = x5 * x2;
+    return x * (1.0f - x2/6.0f * (1.0f - x2/20.0f * (1.0f - x2/42.0f)));
+}
+#endif
 
+#if HAVE_NEON
 // NEON-optimized cosine function
 static inline float32x4_t cos_ps(float32x4_t x) {
     // cos(x) = sin(x + π/2)
-    return sin_ps(vaddq_f32(x, vdupq_n_f32(PI / 2.0f)));
+    const float32x4_t half_pi = vdupq_n_f32(PI / 2.0f);
+    return sin_ps(vaddq_f32(x, half_pi));
 }
+#else
+// Fallback implementation for non-NEON
+static inline float cos_ps(float x) {
+    // Wrap x to [-π, π]
+    x = fmodf(fabsf(x), 2.0f * M_PI);
+    if (x > M_PI) x = 2.0f * M_PI - x;
+    
+    // 6th order Taylor series approximation
+    float x2 = x * x;
+    float x4 = x2 * x2;
+    float x6 = x4 * x2;
+    return 1.0f - x2/2.0f * (1.0f - x2/12.0f * (1.0f - x2/30.0f));
+}
+#endif
 
+#if HAVE_NEON
 // NEON-optimized complex multiplication
 static inline void complex_multiply_ps(
     float32x4_t a_real, float32x4_t a_imag,
     float32x4_t b_real, float32x4_t b_imag,
     float32x4_t* out_real, float32x4_t* out_imag
 ) {
-    // (a + bi) * (c + di) = (ac - bd) + (ad + bc)i
     *out_real = vsubq_f32(
         vmulq_f32(a_real, b_real),
         vmulq_f32(a_imag, b_imag)
@@ -102,39 +145,64 @@ static inline void complex_multiply_ps(
         vmulq_f32(a_imag, b_real)
     );
 }
+#else
+// Fallback implementation for non-NEON
+static inline void complex_multiply_ps(
+    float a_real, float a_imag,
+    float b_real, float b_imag,
+    float* out_real, float* out_imag
+) {
+    *out_real = a_real * b_real - a_imag * b_imag;
+    *out_imag = a_real * b_imag + a_imag * b_real;
+}
+#endif
 
-// NEON-optimized vectorized sum
+// Vectorized sum with NEON optimization when available
 static inline float vector_sum(float* data, int n) {
     float sum = 0.0f;
-    int i = 0;
     
-    // Process 4 elements at a time
-    float32x4_t sum_vec = vdupq_n_f32(0.0f);
-    for (; i <= n - 4; i += 4) {
-        sum_vec = vaddq_f32(sum_vec, vld1q_f32(data + i));
+    #if HAVE_NEON
+    if (n >= 4) {
+        float32x4_t sum_vec = vdupq_n_f32(0.0f);
+        int i = 0;
+        
+        // Process 4 elements at a time with NEON
+        for (; i <= n - 4; i += 4) {
+            float32x4_t data_vec = vld1q_f32(data + i);
+            sum_vec = vaddq_f32(sum_vec, data_vec);
+        }
+        
+        // Horizontal add
+        float32x2_t sum_high = vget_high_f32(sum_vec);
+        float32x2_t sum_low = vget_low_f32(sum_vec);
+        sum_high = vadd_f32(sum_high, sum_low);
+        sum = vget_lane_f32(vpadd_f32(sum_high, sum_high), 0);
+        
+        // Process remaining elements
+        for (; i < n; i++) {
+            sum += data[i];
+        }
+        
+        return sum;
     }
+    #endif
     
-    // Sum the vector
-    float32x2_t sum_high = vget_high_f32(sum_vec);
-    float32x2_t sum_low = vget_low_f32(sum_vec);
-    float32x2_t sum_pair = vadd_f32(sum_high, sum_low);
-    sum = vget_lane_f32(vpadd_f32(sum_pair, sum_pair), 0);
-    
-    // Process remaining elements
-    for (; i < n; i++) {
+    // Fallback to scalar implementation
+    for (int i = 0; i < n; i++) {
         sum += data[i];
     }
     
     return sum;
 }
 
+#if HAVE_NEON
 // NEON-optimized vector multiplication and accumulate
 static inline void vector_multiply_accumulate(
     const float* a, const float* b, float* out, int n
 ) {
     int i = 0;
     
-    // Process 4 elements at a time
+    // Process 4 elements at a time with NEON
     for (; i <= n - 4; i += 4) {
         float32x4_t a_vec = vld1q_f32(a + i);
         float32x4_t b_vec = vld1q_f32(b + i);
@@ -149,7 +217,27 @@ static inline void vector_multiply_accumulate(
         out[i] += a[i] * b[i];
     }
 }
+#else
+// Fallback implementation for non-NEON
+static inline void vector_multiply_accumulate(
+    const float* a, const float* b, float* out, int n
+) {
+    // Process 4 elements at a time for better performance
+    int i = 0;
+    for (; i <= n - 4; i += 4) {
+        out[i]   += a[i]   * b[i];
+        out[i+1] += a[i+1] * b[i+1];
+        out[i+2] += a[i+2] * b[i+2];
+        out[i+3] += a[i+3] * b[i+3];
+    }
+    // Process remaining elements
+    for (; i < n; i++) {
+        out[i] += a[i] * b[i];
+    }
+}
+#endif
 
+#if HAVE_NEON
 // NEON-optimized matrix-vector multiplication
 static void matrix_vector_multiply(
     const float* matrix, const float* vector,
@@ -159,21 +247,21 @@ static void matrix_vector_multiply(
         const float* row = matrix + i * cols;
         float sum = 0.0f;
         
-        // Process 4 elements at a time
         int j = 0;
         float32x4_t sum_vec = vdupq_n_f32(0.0f);
         
+        // Process 4 elements at a time with NEON
         for (; j <= cols - 4; j += 4) {
             float32x4_t row_vec = vld1q_f32(row + j);
             float32x4_t vec = vld1q_f32(vector + j);
             sum_vec = vmlaq_f32(sum_vec, row_vec, vec);
         }
         
-        // Sum the vector
+        // Horizontal add
         float32x2_t sum_high = vget_high_f32(sum_vec);
         float32x2_t sum_low = vget_low_f32(sum_vec);
-        float32x2_t sum_pair = vadd_f32(sum_high, sum_low);
-        sum = vget_lane_f32(vpadd_f32(sum_pair, sum_pair), 0);
+        sum_high = vadd_f32(sum_high, sum_low);
+        sum = vget_lane_f32(vpadd_f32(sum_high, sum_high), 0);
         
         // Process remaining elements
         for (; j < cols; j++) {
@@ -183,14 +271,33 @@ static void matrix_vector_multiply(
         result[i] = sum;
     }
 }
+#else
+// Fallback implementation for non-NEON
+static void matrix_vector_multiply(
+    const float* matrix, const float* vector,
+    float* result, int rows, int cols
+) {
+    for (int i = 0; i < rows; i++) {
+        const float* row = matrix + i * cols;
+        float sum = 0.0f;
+        
+        for (int j = 0; j < cols; j++) {
+            sum += row[j] * vector[j];
+        }
+        
+        result[i] = sum;
+    }
+}
+#endif
 
+#if HAVE_NEON
 // NEON-optimized element-wise multiplication
 static void vector_multiply(
     const float* a, const float* b, float* out, int n
 ) {
     int i = 0;
     
-    // Process 4 elements at a time
+    // Process 4 elements at a time with NEON
     for (; i <= n - 4; i += 4) {
         float32x4_t a_vec = vld1q_f32(a + i);
         float32x4_t b_vec = vld1q_f32(b + i);
@@ -203,14 +310,34 @@ static void vector_multiply(
         out[i] = a[i] * b[i];
     }
 }
+#else
+// Fallback implementation for non-NEON
+static void vector_multiply(
+    const float* a, const float* b, float* out, int n
+) {
+    // Process 4 elements at a time for better performance
+    int i = 0;
+    for (; i <= n - 4; i += 4) {
+        out[i]   = a[i]   * b[i];
+        out[i+1] = a[i+1] * b[i+1];
+        out[i+2] = a[i+2] * b[i+2];
+        out[i+3] = a[i+3] * b[i+3];
+    }
+    // Process remaining elements
+    for (; i < n; i++) {
+        out[i] = a[i] * b[i];
+    }
+}
+#endif
 
+#if HAVE_NEON
 // NEON-optimized element-wise addition
 static void vector_add(
     const float* a, const float* b, float* out, int n
 ) {
     int i = 0;
     
-    // Process 4 elements at a time
+    // Process 4 elements at a time with NEON
     for (; i <= n - 4; i += 4) {
         float32x4_t a_vec = vld1q_f32(a + i);
         float32x4_t b_vec = vld1q_f32(b + i);
@@ -223,14 +350,34 @@ static void vector_add(
         out[i] = a[i] + b[i];
     }
 }
+#else
+// Fallback implementation for non-NEON
+static void vector_add(
+    const float* a, const float* b, float* out, int n
+) {
+    // Process 4 elements at a time for better performance
+    int i = 0;
+    for (; i <= n - 4; i += 4) {
+        out[i]   = a[i]   + b[i];
+        out[i+1] = a[i+1] + b[i+1];
+        out[i+2] = a[i+2] + b[i+2];
+        out[i+3] = a[i+3] + b[i+3];
+    }
+    // Process remaining elements
+    for (; i < n; i++) {
+        out[i] = a[i] + b[i];
+    }
+}
+#endif
 
+#if HAVE_NEON
 // NEON-optimized element-wise subtraction
 static void vector_subtract(
     const float* a, const float* b, float* out, int n
 ) {
     int i = 0;
     
-    // Process 4 elements at a time
+    // Process 4 elements at a time with NEON
     for (; i <= n - 4; i += 4) {
         float32x4_t a_vec = vld1q_f32(a + i);
         float32x4_t b_vec = vld1q_f32(b + i);
@@ -243,7 +390,27 @@ static void vector_subtract(
         out[i] = a[i] - b[i];
     }
 }
+#else
+// Fallback implementation for non-NEON
+static void vector_subtract(
+    const float* a, const float* b, float* out, int n
+) {
+    // Process 4 elements at a time for better performance
+    int i = 0;
+    for (; i <= n - 4; i += 4) {
+        out[i]   = a[i]   - b[i];
+        out[i+1] = a[i+1] - b[i+1];
+        out[i+2] = a[i+2] - b[i+2];
+        out[i+3] = a[i+3] - b[i+3];
+    }
+    // Process remaining elements
+    for (; i < n; i++) {
+        out[i] = a[i] - b[i];
+    }
+}
+#endif
 
+#if HAVE_NEON
 // NEON-optimized vector scaling
 static void vector_scale(
     const float* in, float scale, float* out, int n
@@ -251,7 +418,7 @@ static void vector_scale(
     int i = 0;
     float32x4_t scale_vec = vdupq_n_f32(scale);
     
-    // Process 4 elements at a time
+    // Process 4 elements at a time with NEON
     for (; i <= n - 4; i += 4) {
         float32x4_t in_vec = vld1q_f32(in + i);
         float32x4_t out_vec = vmulq_f32(in_vec, scale_vec);
@@ -263,3 +430,22 @@ static void vector_scale(
         out[i] = in[i] * scale;
     }
 }
+#else
+// Fallback implementation for non-NEON
+static void vector_scale(
+    const float* in, float scale, float* out, int n
+) {
+    // Process 4 elements at a time for better performance
+    int i = 0;
+    for (; i <= n - 4; i += 4) {
+        out[i]   = in[i]   * scale;
+        out[i+1] = in[i+1] * scale;
+        out[i+2] = in[i+2] * scale;
+        out[i+3] = in[i+3] * scale;
+    }
+    // Process remaining elements
+    for (; i < n; i++) {
+        out[i] = in[i] * scale;
+    }
+}
+#endif

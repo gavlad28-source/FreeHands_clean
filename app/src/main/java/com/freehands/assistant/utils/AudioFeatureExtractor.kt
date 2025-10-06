@@ -6,25 +6,6 @@ import android.media.MediaRecorder
 import android.util.Log
 import java.util.concurrent.atomic.AtomicReference
 
-// Load the native library
-private const val LIBRARY_NAME = "audio_processing"
-
-init {
-    System.loadLibrary(LIBRARY_NAME)
-}
-
-private external fun nativeInit(): Long
-private external fun nativeRelease(handle: Long)
-private external fun nativeComputeMfcc(
-    audioData: FloatArray,
-    numSamples: Int,
-    sampleRate: Int,
-    numMfcc: Int,
-    numFilters: Int
-): FloatArray
-
-private external fun nativeFft(input: FloatArray, n: Int): FloatArray
-
 /**
  * Extracts audio features for voice recognition and analysis.
  */
@@ -32,6 +13,30 @@ class AudioFeatureExtractor {
     
     companion object {
         private const val TAG = "AudioFeatureExtractor"
+        private const val LIBRARY_NAME = "audio_processing"
+        
+        init {
+            System.loadLibrary(LIBRARY_NAME)
+        }
+        
+        @JvmStatic
+        private external fun nativeInit(): Long
+        
+        @JvmStatic
+        private external fun nativeRelease(handle: Long)
+        
+        @JvmStatic
+        private external fun nativeComputeMfcc(
+            audioData: FloatArray,
+            numSamples: Int,
+            sampleRate: Int,
+            numMfcc: Int,
+            numFilters: Int
+        ): FloatArray
+        
+        @JvmStatic
+        private external fun nativeFft(input: FloatArray, n: Int): FloatArray
+        
         private const val SAMPLE_RATE = 16000 // 16kHz sample rate
         private const val WINDOW_SIZE = 1024 // FFT window size (must be power of 2)
         private const val HOP_SIZE = 512 // Hop size for FFT
@@ -237,69 +242,27 @@ class AudioFeatureExtractor {
                 val filter = melFilterBank[i]
                 for (j in powerSpectrum.indices) {
                     energy += powerSpectrum[j] * filter[j]
-        // Apply DCT to get MFCCs with optimized loop
-        for (i in 0 until NUM_MFCC) {
-            var sum = 0.0f
-            val dctRow = dctMatrix[i]
-            for (j in 0 until NUM_FILTERS) {
-                sum += dctRow[j] * melEnergies[j]
-            }
-            mfcc[i] = sum
-        }
-
-        // Create a copy to return, as we need to release our pooled array
-        return mfcc.copyOf()
-    } finally {
-        // Release all arrays back to their pools
-        powerSpectrumPool.release(powerSpectrum)
-        melEnergiesPool.release(melEnergies)
-        mfccPool.release(mfcc)
-    }
-            output[2 * i + 1] = 0f
-        }
-        
-        // Cooley-Tukey FFT with optimized inner loops
-        var mmax = 1
-        var istep: Int
-        var m: Int
-        var theta: Float
-        var wtemp: Float
-        var wpr: Float
-        var wpi: Float
-        var wr: Float
-        var wi: Float
-        var tempr: Float
-        var tempi: Float
-        
-        while (n > mmax) {
-            istep = mmax shl 1
-            theta = (-Math.PI / mmax).toFloat()
-            wtemp = sin(0.5f * theta)
-            wpr = -2.0f * wtemp * wtemp
-            wpi = sin(theta)
-            wr = 1.0f
-            wi = 0f
-            
-            m = 0
-            while (m < mmax) {
-                var k = m
-                while (k < n) {
-                    val j = k + mmax
-                    tempr = wr * output[2 * j] - wi * output[2 * j + 1]
-                    tempi = wr * output[2 * j + 1] + wi * output[2 * j]
-                    
-                    output[2 * j] = output[2 * k] - tempr
-                    output[2 * j + 1] = output[2 * k + 1] - tempi
-                    output[2 * k] += tempr
-                    output[2 * k + 1] += tempi
-                    
-                    k += istep
                 }
+                melEnergies[i] = ln(maxOf(energy, 1e-10f))
             }
+            
+            // Apply DCT to get MFCCs with optimized loop
+            for (i in 0 until NUM_MFCC) {
+                var sum = 0.0f
+                val dctRow = dctMatrix[i]
+                for (j in 0 until NUM_FILTERS) {
+                    sum += dctRow[j] * melEnergies[j]
+                }
+                mfcc[i] = sum
+            }
+
+            // Create a copy to return, as we need to release our pooled array
+            return mfcc.copyOf()
+        } finally {
+            // Release all arrays back to their pools
+            melEnergiesPool.release(melEnergies)
+            mfccPool.release(mfcc)
         }
-        
-        return output
-    }
     }
     
     private fun createMelFilterBank(): Array<FloatArray> {

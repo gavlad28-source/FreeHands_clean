@@ -90,4 +90,9 @@
     <string name="about_version">Version 1.0</string>
     <string name="about_description">FreeHands provides secure, hands-free control of your Android device using voice biometric authentication. All voice processing is done locally on your device for maximum privacy and security.</string>
     <string name="about_privacy">Your voice patterns never leave your device and are encrypted using military-grade security.</string>
+
+    <!-- Service -->
+    <string name="voice_command_service">Voice Command Service</string>
+    <string name="voice_interaction_service">Voice Interaction Service</string>
+    <string name="title_activity_settings">Settings</string>
 </resources>

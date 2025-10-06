@@ -1,24 +1,66 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android' version '2.2.0'
-    id 'kotlin-kapt'
-    id 'com.google.dagger.hilt.android' version '2.50'
-    id 'androidx.navigation.safeargs.kotlin'
-    id 'org.jetbrains.kotlin.plugin.compose' version '2.2.0'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
+}
+
+// Load signing config
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+} else {
+    // Use debug config if keystore.properties doesn't exist
+    keystoreProperties['storeFile'] = 'debug.keystore'
+    keystoreProperties['storePassword'] = 'android'
+    keystoreProperties['keyAlias'] = 'androiddebugkey'
+    keystoreProperties['keyPassword'] = 'android'
+}
+
+// Common configuration for all test types
+tasks.withType(Test) {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = true
+    }
+}
+
+// Configure test task dependencies
+afterEvaluate {
+    // This ensures test tasks run after their dependencies
+    tasks.named('testDebugUnitTest') {
+        dependsOn 'assembleDebug', 'compileDebugUnitTestKotlin'
+    }
+    
+    tasks.named('testReleaseUnitTest') {
+        dependsOn 'assembleRelease', 'compileReleaseUnitTestKotlin'
+    }
+    
+    // Create a testClasses task if it doesn't exist
+    if (!tasks.findByName('testClasses')) {
+        tasks.register('testClasses') {
+            group = 'verification'
+            description = 'Assembles test classes for both test and production code'
+            dependsOn 'testDebugUnitTestClasses', 'testReleaseUnitTestClasses'
+        }
+    }
 }
 
 android {
-    namespace 'com.freehands.assistant'
-    compileSdk rootProject.ext.compileSdkVersion
+    namespace 'com.example.freehands_clean'
+    compileSdkVersion 34
+    compileSdk 34
     
     defaultConfig {
-        applicationId "com.freehands.assistant"
-        minSdk rootProject.ext.minSdkVersion
-        targetSdk rootProject.ext.targetSdkVersion
+        applicationId "com.example.freehands_clean"
+        minSdk 26
+        targetSdk 34
         versionCode 1
         versionName "1.0"
         
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         
@@ -34,8 +76,6 @@ android {
             cmake {
                 cppFlags "-std=c++17 -fexceptions -frtti"
                 arguments "-DANDROID_STL=c++_shared"
-                cFlags "-DHAVE_NEON=1"
-                cppFlags "-DHAVE_NEON=1"
             }
         }
     }
@@ -45,6 +85,7 @@ android {
         buildConfig true
         compose true
         dataBinding true
+        prefab true
     }
     
     // Enable NDK build
@@ -55,30 +96,14 @@ android {
         }
     }
     
-    // Enable prefab for native dependencies
-    buildFeatures {
-        prefab true
-    }
-    
-    // Package all .so files in the final APK
-    packagingOptions {
-        jniLibs {
-            useLegacyPackaging true
-        }
-        
-        // Pick first of any duplicate files
-        pickFirst '**/libc++_shared.so'
-        pickFirst '**/libaudio_utils.so'
-    }
-    
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.10' // Matches Kotlin 2.2.0
+        kotlinCompilerExtensionVersion '1.5.10'
     }
     
     // Java and Kotlin compatibility settings
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     
     // NDK version
@@ -86,13 +111,31 @@ android {
     
     // Kotlin compiler options
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = '21'
         freeCompilerArgs += [
             "-Xjvm-default=all",
-            "-opt-in=kotlin.RequiresOptIn"
+            "-opt-in=kotlin.RequiresOptIn",
+            "-Xjdk-release=21"
         ]
     }
     
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+            jvmArgs '--enable-preview'
+            testLogging {
+                events "passed", "skipped", "failed"
+                showStandardStreams true
+                showCauses true
+                showExceptions true
+                showStackTraces true
+            }
+        }
+
+        // Enable test orchestrator for instrumentation tests
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
+
     signingConfigs {
         debug {
             // Use default debug keystore that comes with Android Studio
@@ -100,29 +143,49 @@ android {
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'
+            enableV1Signing true
+            enableV2Signing true
         }
         release {
-            // Use debug keystore for development
-            storeFile file("${System.getProperty('user.home')}/.android/debug.keystore")
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+            // Load from environment variables for CI/CD, fallback to debug for development
+            storeFile file(System.getenv('KEYSTORE_FILE') ?: "${System.getProperty('user.home')}/.android/debug.keystore")
+            storePassword System.getenv('KEYSTORE_PASSWORD') ?: 'android'
+            keyAlias System.getenv('KEY_ALIAS') ?: 'androiddebugkey'
+            keyPassword System.getenv('KEY_PASSWORD') ?: 'android'
+            enableV1Signing true
+            enableV2Signing true
         }
     }
-    
+
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
             debuggable true
+            // Disable minification for faster builds
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            shrinkResources false
+            
+            // Enable test coverage for debug builds
+            testCoverageEnabled true
+            
+            // Configure build config fields
+            buildConfigField 'boolean', 'IS_NEW_ARCHITECTURE_ENABLED', 'false'
+            buildConfigField 'boolean', 'ENABLE_DEBUG_LOGGING', 'true'
+
             signingConfig signingConfigs.debug
         }
+
         release {
+            debuggable false
             minifyEnabled true
             shrinkResources true
+
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField 'boolean', 'IS_NEW_ARCHITECTURE_ENABLED', 'false'
+            buildConfigField 'boolean', 'ENABLE_DEBUG_LOGGING', 'false'
+
             signingConfig signingConfigs.release
         }
     }
@@ -131,24 +194,13 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-    
-    // KAPT configuration for annotation processing
-    kapt {
-        correctErrorTypes = true
-        useBuildCache = true
-        
+
+    // KSP configuration for annotation processing
+    ksp {
         // Room arguments
-        arguments {
-            arg("room.schemaLocation", "$projectDir/schemas")
-            arg("room.incremental", "true")
-        }
-        
-        // Enable verbose KAPT logging
-        // This will provide more detailed error messages
-        javacOptions {
-            option("-Xmaxerrs", "1000")
-            option("-Xmaxwarns", "1000")
-        }
+        arg("room.schemaLocation", "$projectDir/schemas")
+        arg("room.incremental", "true")
+        arg("room.expandProjection", "true")
     }
     
     packagingOptions {
@@ -156,13 +208,14 @@ android {
             excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/license.txt', 'META-INF/NOTICE', 'META-INF/NOTICE.txt', 'META-INF/notice.txt', 'META-INF/ASL2.0', 'META-INF/*.kotlin_module']
         }
         jniLibs {
-            pickFirsts += ['**/libc++_shared.so']
+            useLegacyPackaging true
+            pickFirsts += ['**/libc++_shared.so', '**/libaudio_utils.so']
         }
     }
-    
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.5.3'
-    }
+}
+// Kotlin toolchain configuration
+kotlin {
+    jvmToolchain(21)
 }
 
 // Load the NDK's toolchain when this module is included in the build
@@ -173,75 +226,139 @@ tasks.whenTaskAdded { task ->
 }
 
 dependencies {
-    // Core Android
-    implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
     
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.22"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3'
+    // Performance monitoring
+    // Using AndroidX DocumentFile for scoped storage
+    implementation 'androidx.documentfile:documentfile:1.0.1'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
     
+    // Debugging tools
+    debugImplementation 'com.facebook.flipper:flipper:0.212.0'
+    debugImplementation 'com.facebook.soloader:soloader:0.10.5'
+    debugImplementation ('com.facebook.flipper:flipper-network-plugin:0.212.0') {
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    }
+    
+    // Chucker for network inspection
+    debugImplementation 'com.github.chuckerteam.chucker:library:4.0.0'
+    releaseImplementation 'com.github.chuckerteam.chucker:library-no-op:4.0.0'
+    
+    // Timber for better logging
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+
     // Compose
     def composeBom = platform('androidx.compose:compose-bom:2023.10.01')
     implementation composeBom
     androidTestImplementation composeBom
-    
     implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.material:material'
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.runtime:runtime-livedata'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
-    
+
     // AndroidX Activity Compose
     implementation 'androidx.activity:activity-compose:1.8.0'
-    
+
     // Lifecycle
     def lifecycle_version = "2.6.2"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-    
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
+
     // Room
     def room_version = "2.6.1"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-    
+    ksp "androidx.room:room-compiler:$room_version"
+
     // Hilt
     def hilt_version = "2.50"
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-    kapt "androidx.hilt:hilt-compiler:1.1.0"
+    ksp "com.google.dagger:hilt-android-compiler:$hilt_version"
+    ksp "androidx.hilt:hilt-compiler:1.1.0"
     implementation 'androidx.hilt:hilt-navigation-compose:1.1.0'
-    
+
     // Navigation
     def nav_version = "2.7.7"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.navigation:navigation-compose:$nav_version"
-    
+
     // WorkManager
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
-    
+
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.22"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3'
+
     // Testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    
+
     // Compose Testing
-    androidTestImplementation platform('androidx.compose:compose-bom:2023.10.01')
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     androidTestImplementation 'androidx.compose.ui:ui-test'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest'
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    
+
     // Core Library Desugaring
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+
+    // ======================== VOSK OFFLINE ASR ========================
+    implementation 'com.alphacephei:vosk-android:0.3.32'
+
+    // ======================== PORCUPINE WAKE WORD ========================
+    implementation 'ai.picovoice:porcupine-android:3.0.0'
+
+    // ======================== ANDROID KEYSTORE & SECURITY ========================
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+    implementation 'androidx.biometric:biometric:1.2.0-alpha05'
+
+    // ======================== PERMISSIONS ========================
+    implementation 'com.guolindev.permissionx:permissionx:1.7.1'
+
+    // ======================== TESTING ========================
+    testImplementation 'org.mockito:mockito-core:5.7.0'
+    testImplementation 'org.mockito.kotlin:mockito-kotlin:5.1.0'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3'
+    testImplementation 'androidx.arch.core:core-testing:2.2.0'
+
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
 
-// Firebase and Google Services plugins removed for initial build
-// Apply them when setting up Firebase
+// ======================== SECURE RELEASE TASK ========================
+task assembleSecureRelease {
+    group = 'build'
+    description = 'Assembles a secure release build with all security checks'
+
+    doFirst {
+        // Check keystore.properties exists
+        def keystoreFile = rootProject.file('keystore.properties')
+        if (!keystoreFile.exists()) {
+            throw new GradleException("ERROR: keystore.properties not found! Please create it based on keystore.properties.example")
+        }
+
+        // Check minifyEnabled is true
+        def releaseConfig = android.buildTypes.release
+        if (!releaseConfig.minifyEnabled) {
+            throw new GradleException("ERROR: minifyEnabled must be true for release builds!")
+        }
+
+        println "✓ Security checks passed"
+    }
+
+    dependsOn 'assembleRelease'
+}
