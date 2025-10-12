@@ -1,0 +1,82 @@
+# ===============================
+# 🔧 AUTO SETUP DEEPSOURCE CONFIG
+# Author: Vlad + ChatGPT
+# ===============================
+
+Write-Host "🚀 Начинаю установку DeepSource..." -ForegroundColor Cyan
+
+# Проверяем, что находимся в корне проекта
+if (-not (Test-Path "build.gradle")) {
+    Write-Host "❌ Не найден build.gradle — запусти скрипт из корня проекта!" -ForegroundColor Red
+    exit 1
+}
+
+# Создаём .deepsource.toml
+$deepsourceConfig = @"
+version = 1
+
+[[analyzers]]
+name = "kotlin"
+enabled = true
+
+  [analyzers.meta]
+  runtime_version = "1.9"
+
+[[analyzers]]
+name = "java"
+enabled = true
+
+  [analyzers.meta]
+  runtime_version = "17"
+
+[[analyzers]]
+name = "cpp"
+enabled = true
+
+  [analyzers.meta]
+  standards = ["c++17"]
+
+[[analyzers]]
+name = "shell"
+enabled = true
+
+exclude_patterns = [
+  ".gradle/**",
+  ".idea/**",
+  "build/**",
+  "build-cache/**",
+  "gradle/**",
+  "gradle-temp/**",
+  "backup_*/**",
+  "src.backup/**",
+  "**/generated/**",
+  "docs/**"
+]
+
+[[transformers]]
+name = "autopep8"
+enabled = true
+"@
+
+Set-Content -Path ".deepsource.toml" -Value $deepsourceConfig -Encoding UTF8
+
+Write-Host "✅ Файл .deepsource.toml создан." -ForegroundColor Green
+
+# Добавляем в Git
+git add .deepsource.toml
+
+# Делаем commit
+git commit -m "Add DeepSource configuration for Kotlin, Java, C++, PowerShell"
+
+# Push в GitHub
+git push origin main
+
+Write-Host "✅ Конфигурация загружена в GitHub." -ForegroundColor Green
+
+# Информация о следующем шаге
+Write-Host ""
+Write-Host "🌐 Теперь зайди на https://deepsource.com" -ForegroundColor Yellow
+Write-Host "   Войди через GitHub → выбери репозиторий 'gavlad28-source/FreeHands_clean'" -ForegroundColor Yellow
+Write-Host "   DeepSource автоматически подхватит .deepsource.toml и начнёт анализ кода." -ForegroundColor Yellow
+Write-Host ""
+Write-Host "💡 Готово! Проверяй раздел 'Issues' в DeepSource через пару минут." -ForegroundColor Cyan
