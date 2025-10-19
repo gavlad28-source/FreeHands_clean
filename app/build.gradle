@@ -2,6 +2,14 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.devtools.ksp'
+    id 'io.gitlab.arturbosch.detekt'
+    id 'org.jlleitschuh.gradle.ktlint'
+    id 'com.diffplug.spotless'
+}
+
+detekt {
+    config.setFrom(files("$rootDir/detekt.yml"))
+    buildUponDefaultConfig = true
 }
 
 // Load signing config
@@ -28,7 +36,6 @@ tasks.withType(Test) {
 
 // Configure test task dependencies
 afterEvaluate {
-    // This ensures test tasks run after their dependencies
     tasks.named('testDebugUnitTest') {
         dependsOn 'assembleDebug', 'compileDebugUnitTestKotlin'
     }
@@ -37,7 +44,6 @@ afterEvaluate {
         dependsOn 'assembleRelease', 'compileReleaseUnitTestKotlin'
     }
     
-    // Create a testClasses task if it doesn't exist
     if (!tasks.findByName('testClasses')) {
         tasks.register('testClasses') {
             group = 'verification'
@@ -67,7 +73,6 @@ android {
         buildConfigField 'String', 'VERSION_NAME', "\"${versionName}\""
         buildConfigField 'int', 'VERSION_CODE', "${versionCode}"
         
-        // NDK configuration
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         }
@@ -88,7 +93,6 @@ android {
         prefab true
     }
     
-    // Enable NDK build
     externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
@@ -100,16 +104,13 @@ android {
         kotlinCompilerExtensionVersion '1.5.10'
     }
     
-    // Java and Kotlin compatibility settings
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_21
         targetCompatibility JavaVersion.VERSION_21
     }
     
-    // NDK version
-    ndkVersion "25.2.9519653"
+    ndkVersion "26.1.10909125"
     
-    // Kotlin compiler options
     kotlinOptions {
         jvmTarget = '21'
         freeCompilerArgs += [
@@ -125,20 +126,23 @@ android {
             jvmArgs '--enable-preview'
             testLogging {
                 events "passed", "skipped", "failed"
-                showStandardStreams true
-                showCauses true
-                showExceptions true
-                showStackTraces true
+                showStandardStreams = true
+                showCauses = true
+                showExceptions = true
+                showStackTraces = true
             }
         }
 
-        // Enable test orchestrator for instrumentation tests
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
+
+    lint {
+        abortOnError true
+        checkReleaseBuilds true
     }
 
     signingConfigs {
         debug {
-            // Use default debug keystore that comes with Android Studio
             storeFile file("${System.getProperty('user.home')}/.android/debug.keystore")
             storePassword 'android'
             keyAlias 'androiddebugkey'
@@ -147,7 +151,6 @@ android {
             enableV2Signing true
         }
         release {
-            // Load from environment variables for CI/CD, fallback to debug for development
             storeFile file(System.getenv('KEYSTORE_FILE') ?: "${System.getProperty('user.home')}/.android/debug.keystore")
             storePassword System.getenv('KEYSTORE_PASSWORD') ?: 'android'
             keyAlias System.getenv('KEY_ALIAS') ?: 'androiddebugkey'
@@ -162,17 +165,11 @@ android {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
             debuggable true
-            // Disable minification for faster builds
             minifyEnabled false
             shrinkResources false
-            
-            // Enable test coverage for debug builds
             testCoverageEnabled true
-            
-            // Configure build config fields
             buildConfigField 'boolean', 'IS_NEW_ARCHITECTURE_ENABLED', 'false'
             buildConfigField 'boolean', 'ENABLE_DEBUG_LOGGING', 'true'
-
             signingConfig signingConfigs.debug
         }
 
@@ -180,24 +177,18 @@ android {
             debuggable false
             minifyEnabled true
             shrinkResources true
-
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
             buildConfigField 'boolean', 'IS_NEW_ARCHITECTURE_ENABLED', 'false'
             buildConfigField 'boolean', 'ENABLE_DEBUG_LOGGING', 'false'
-
             signingConfig signingConfigs.release
         }
     }
     
-    // Source sets configuration
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    // KSP configuration for annotation processing
     ksp {
-        // Room arguments
         arg("room.schemaLocation", "$projectDir/schemas")
         arg("room.incremental", "true")
         arg("room.expandProjection", "true")
@@ -213,12 +204,23 @@ android {
         }
     }
 }
-// Kotlin toolchain configuration
+
+spotless {
+    kotlin {
+        target 'src/**/*.kt'
+        ktlint()
+    }
+    format 'misc', {
+        target '**/*.gradle', '**/*.md', '**/.gitignore'
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
 kotlin {
     jvmToolchain(21)
 }
 
-// Load the NDK's toolchain when this module is included in the build
 tasks.whenTaskAdded { task ->
     if (task.name.startsWith('process') && task.name.endsWith('Resources')) {
         task.dependsOn('buildCMakeDebug')
@@ -230,12 +232,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-    
     // Performance monitoring
-    // Using AndroidX DocumentFile for scoped storage
     implementation 'androidx.documentfile:documentfile:1.0.1'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
     
@@ -303,44 +300,42 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2'
 
-    // Testing
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-
-    // Compose Testing
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
-    androidTestImplementation 'androidx.compose.ui:ui-test'
-
     // Core Library Desugaring
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 
-    // ======================== VOSK OFFLINE ASR ========================
+    // ======================== VOSK OFFLINE ASR ========================    
     implementation 'com.alphacephei:vosk-android:0.3.32'
 
-    // ======================== PORCUPINE WAKE WORD ========================
+    // ======================== PORCUPINE WAKE WORD ========================    
     implementation 'ai.picovoice:porcupine-android:3.0.0'
 
-    // ======================== ANDROID KEYSTORE & SECURITY ========================
+    // ======================== ANDROID KEYSTORE & SECURITY ========================    
     implementation 'androidx.security:security-crypto:1.1.0'
     implementation 'androidx.biometric:biometric:1.4.0-alpha04'
 
-    // ======================== PERMISSIONS ========================
+    // ======================== PERMISSIONS ========================    
     implementation 'com.guolindev.permissionx:permissionx:1.7.1'
 
-    // ======================== TESTING ========================
+    // ======================== TESTING ========================    
+    // Unit Tests (JUnit5, Mockito, etc.)
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.0"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.0"
+    testImplementation "org.mockito:mockito-junit-jupiter:5.7.0"
     testImplementation 'org.mockito:mockito-core:5.7.0'
     testImplementation 'org.mockito.kotlin:mockito-kotlin:5.1.0'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2'
     testImplementation 'androidx.arch.core:core-testing:2.2.0'
-
+    
+    // UI (Instrumentation) Tests (Espresso, UI Automator)
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     androidTestImplementation 'androidx.test:runner:1.5.2'
     androidTestImplementation 'androidx.test:rules:1.5.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
 
-// ======================== SECURE RELEASE TASK ========================
-task assembleSecureRelease {
+// ======================== SECURE RELEASE TASK ========================task assembleSecureRelease {
     group = 'build'
     description = 'Assembles a secure release build with all security checks'
 

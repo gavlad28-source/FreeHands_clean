@@ -1,0 +1,33 @@
+build:
+  maxIssues: 10
+
+config:
+  # We recommend to inherit from the default config and then override properties.
+  # See https://detekt.dev/docs/introduction/configurations
+  # 
+  # active: true
+
+style:
+  # reports magic numbers
+  MagicNumber:
+    # size of the number, after which it is considered magic
+    # Default: '100'
+    ignoreNumbers: '-1,0,1,2,100,1000'
+  # reports functions with a long parameter list
+  # Default: '6'
+  LongParameterList:
+    functionThreshold: 6
+  # reports when a file has a name that doesn't match the class name
+  # Default: 'true'
+  MatchingDeclarationName:
+    active: true
+  MaxLineLength:
+    maxLineLength: 120
+  UnusedPrivateMember:
+    active: true
+
+# You can also exclude rules and rule sets.
+# See https://detekt.dev/docs/introduction/suppress-rules
+# 
+# style:
+#   - WildcardImport

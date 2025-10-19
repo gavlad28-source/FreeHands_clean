@@ -64,7 +64,7 @@
 ## 🚀 Installation
 
 ### Option 1: Download Release APK
-1. Перейдите в [Releases](https://github.com/yourusername/freehands/releases)
+1. Перейдите в [Releases](https://github.com/gavlad28-source/FreeHands_clean/releases)
 2. Скачайте последний `app-release.apk`
 3. Установите APK на устройство
 4. Разрешите установку из неизвестных источников
@@ -76,8 +76,8 @@
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/yourusername/freehands.git
-cd freehands
+git clone https://github.com/gavlad28-source/FreeHands_clean.git
+cd FreeHands_clean
 ```
 
 ### 2. Download Speech Models
@@ -292,8 +292,8 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
 
 ### Development Setup
 ```bash
-git clone https://github.com/yourusername/freehands.git
-cd freehands
+git clone https://github.com/gavlad28-source/FreeHands_clean.git
+cd FreeHands_clean
 ./gradlew clean build
 ```
 
@@ -330,8 +330,8 @@ See [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for complete list.
 ## 📞 Support
 
 - 📧 Email: support@freehands.app
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/freehands/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/yourusername/freehands/discussions)
+- 🐛 Issues: [GitHub Issues](https://github.com/gavlad28-source/FreeHands_clean/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/gavlad28-source/FreeHands_clean/discussions)
 
 ## 🗺️ Roadmap
 

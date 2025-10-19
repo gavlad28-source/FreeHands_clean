@@ -1,125 +1,117 @@
+# Set the minimum required version of CMake.
 cmake_minimum_required(VERSION 3.22.1)
 
-# Set the project name
-project(audio_processing)
-
-# Add the math library to the target
-find_library(log-lib log)
-
-# Include the NDK's android-ndk-stl directory
-include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
-
-# Enable testing
-enable_testing()
-
-# Find and include GoogleTest
-include(FetchContent)
-FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+# Project definition
+project(
+    audio_processing
+    LANGUAGES C CXX
 )
-FetchContent_MakeAvailable(googletest)
 
-# Add cpufeatures as a static library
+#======================================================================
+# Options
+#======================================================================
+
+# Set C++ standard to C++17
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+#======================================================================
+# Find Dependencies
+#======================================================================
+
+# Find the Android logging library
+find_library(
+    log-lib    # Sets the name of the variable
+    log        # Specifies the name of the library to find
+)
+
+#======================================================================
+# NDK Libraries
+#======================================================================
+
+# Add cpufeatures as a library to detect CPU capabilities at runtime.
 add_library(cpufeatures STATIC
-    ${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c
+    ${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c)
+target_include_directories(cpufeatures PUBLIC
+    ${ANDROID_NDK}/sources/android/cpufeatures)
+
+#======================================================================
+# Main Native Library
+#======================================================================
+
+# It's better practice to list source files explicitly
+# than using file(GLOB_RECURSE...).
+# Please add your source files here.
+set(AUDIO_PROCESSING_SOURCES
+    # Example:
+    # "JNI/jni_bridge.cpp"
+    # "VAD/webrtc_vad.c"
 )
 
-# Set include directory for cpufeatures
-target_include_directories(cpufeatures PRIVATE
-    ${ANDROID_NDK}/sources/android/cpufeatures
-)
-
-# List all source files for the main library
-file(GLOB_RECURSE AUDIO_PROCESSING_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/*.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../jni/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../jni/*.c"
-)
-
-# Define the main library
 add_library(
     audio_processing
     SHARED
     ${AUDIO_PROCESSING_SOURCES}
 )
 
-# Find test files if they exist
-file(GLOB_RECURSE TEST_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/../test/cpp/**/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../test/jni/*.cpp"
-)
-
-# Only add test executable if test files exist
-if(TEST_SOURCES)
-    # Create a test executable
-    add_executable(
-        audio_processing_tests
-        ${TEST_SOURCES}
-    )
-    
-    # Link test executable with gtest and the main library
-    target_link_libraries(audio_processing_tests
-        PRIVATE
-        gtest_main
-        audio_processing
-    )
-    
-    # Add the test to CTest
-    include(GoogleTest)
-    gtest_discover_tests(audio_processing_tests)
-endif()
-
-# Removed duplicate target_link_libraries
-
-# Add test
-add_test(NAME audio_processing_tests COMMAND audio_processing_tests)
-
-# Link the libraries
+# Link dependencies to the main library
 target_link_libraries(
-        audio_processing
-        android
-        ${log-lib}
-        cpufeatures
-        -latomic
+    audio_processing
+    PRIVATE
+    android
+    cpufeatures
+    ${log-lib}
+    -latomic
 )
 
-# Enable C++17
-target_compile_features(audio_processing PRIVATE cxx_std_17)
+# Set compiler flags for the main library
+target_compile_options(audio_processing PRIVATE
+    -fexceptions
+    -frtti
+    -Wall
+    -Werror # Treat warnings as errors
+)
 
-# Set common compile flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions -frtti -fno-limit-debug-info")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fexceptions -fno-limit-debug-info")
-
-# Set architecture-specific flags
-if(ANDROID_ABI STREQUAL "armeabi-v7a")
-    # Enable NEON for ARMv7
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mfloat-abi=softfp -mfpu=neon -march=armv7-a")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mfloat-abi=softfp -mfpu=neon -march=armv7-a")
+# Set architecture-specific compile definitions
+if(ANDROID_ABI STREQUAL "armeabi-v7a" OR ANDROID_ABI STREQUAL "arm64-v8a")
     target_compile_definitions(audio_processing PRIVATE HAVE_NEON=1)
-    
-elseif(ANDROID_ABI STREQUAL "arm64-v8a")
-    # ARM64 always has NEON
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv8-a")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a")
-    target_compile_definitions(audio_processing PRIVATE HAVE_NEON=1)
-    
-elseif(ANDROID_ABI STREQUAL "x86" OR ANDROID_ABI STREQUAL "x86_64")
-    # x86 doesn't support NEON, use SSE/SSE2 instead
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2 -mfpmath=sse")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse2 -mfpmath=sse")
-    target_compile_definitions(audio_processing PRIVATE HAVE_NEON=0)
-    
 else()
-    # For other ABIs, disable NEON
     target_compile_definitions(audio_processing PRIVATE HAVE_NEON=0)
-    message(WARNING "Unsupported ABI: ${ANDROID_ABI}, NEON optimizations disabled")
 endif()
 
-# Add include directories for cpufeatures (used for runtime CPU detection)
-include_directories(${ANDROID_NDK}/sources/cpufeatures)
-include_directories(${ANDROID_NDK}/sources/android/cpufeatures)
 
-# Enable RTTI and exceptions
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions -frtti")
+#======================================================================
+# C++ Unit Tests (using GoogleTest)
+#======================================================================
+
+# Enable testing for the project
+enable_testing()
+
+# Use FetchContent to download and configure GoogleTest
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+)
+# For local development, this is fine. For faster CI, consider pre-caching.
+FetchContent_MakeAvailable(googletest)
+
+
+# Define the test executable
+add_executable(
+    audio_processing_tests
+    # Add your test source files here
+    # "test/cpp/some_test.cpp"
+)
+
+# Link the test executable against GoogleTest and the library being tested
+target_link_libraries(
+    audio_processing_tests
+    PRIVATE
+    audio_processing
+    gtest_main
+)
+
+# Automatically discover and add tests to CTest
+include(GoogleTest)
+gtest_discover_tests(audio_processing_tests)
