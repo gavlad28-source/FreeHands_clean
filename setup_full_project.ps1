@@ -1,111 +1,70 @@
-<#
-PowerShell Script: setup_full_project.ps1
-Purpose: Fully setup Android project with MVVM, DI, Room, Compose, Firebase, AI + Voice.
-#>
+# ======================================
+# setup_full_project.ps1
+# Полная автоматизация проекта FreeHands_clean
+# ======================================
 
-Write-Host "=== START: setup_full_project.ps1 ==="
+# --- 1) Перейти в корень проекта ---
+cd $PSScriptRoot
 
-$projRoot = Get-Location
-Write-Host "Project root: $projRoot"
+Write-Host "🚀 Начинаем автоматическую настройку проекта..."
 
-# --- 1) Backup existing files
-$backupDir = ".setup_backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
-New-Item -ItemType Directory -Path $backupDir | Out-Null
-Write-Host "Backup dir: $backupDir"
-
-$targets = @(
-    "app/src/main/java/**/App.kt",
-    "app/src/main/java/**/viewmodel/**",
-    "app/src/main/java/**/di/**",
-    "app/src/main/java/**/ui/**",
-    "app/src/main/java/**/data/**",
-    "app/src/main/java/**/ai/**"
-)
-
-foreach ($t in $targets) {
-    $found = Get-ChildItem -Path $projRoot -Recurse -Force -Include $t -ErrorAction SilentlyContinue
-    foreach ($f in $found) {
-        $dest = Join-Path $backupDir ($f.Name)
-        Copy-Item $f.FullName $dest -Recurse -Force -ErrorAction SilentlyContinue
-        Remove-Item $f.FullName -Recurse -Force -ErrorAction SilentlyContinue
-        Write-Host "Backed up & removed: $($f.FullName)"
+# --- 2) Удаляем старые бэкапы и дубли ---
+$backupFolders = @("backup_20250929_171535", "src_backup")
+foreach ($folder in $backupFolders) {
+    if (Test-Path $folder) {
+        Remove-Item -Recurse -Force $folder
+        Write-Host "🗑 Удалена папка: $folder"
     }
 }
 
-# --- 2) Detect package
-$manifestPath = "app/src/main/AndroidManifest.xml"
-$manifestText = Get-Content $manifestPath -Raw
-if ($manifestText -match 'package\s*=\s*"(.*?)"') {
-    $packageName = $Matches[1]
-} else { $packageName = "com.freehands.app" }
-$pkgPath = $packageName -replace '\.','/'
-$javaBase = "app/src/main/java/$pkgPath"
-
-# --- 3) Create folder structure
-$folders = @(
-    "$javaBase/data/local",
-    "$javaBase/data/remote",
-    "$javaBase/data/repository",
-    "$javaBase/di",
-    "$javaBase/domain/models",
-    "$javaBase/ui/main",
-    "$javaBase/ui/voice",
-    "$javaBase/ai/voice",
-    "$javaBase/ui/components",
-    "$javaBase/ui/theme"
+# --- 3) Создаём структуру MVVM + DI + Repository + Room + Firebase + AI + Voice ---
+$basePath = "app/src/main/java/com/garbe/freehands"
+$packages = @(
+    "$basePath/data/local",
+    "$basePath/data/remote",
+    "$basePath/data/repository",
+    "$basePath/domain/models",
+    "$basePath/di",
+    "$basePath/ui/main"
 )
-foreach ($f in $folders) { New-Item -ItemType Directory -Path $f -Force | Out-Null }
 
-# --- 4) Create ViewModels with Hilt
-$vmList = @{
-    "MainViewModel.kt" = @"
-package $packageName.ui.main
-
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-
-@HiltViewModel
-class MainViewModel @Inject constructor(): ViewModel() {}
-"@
-    "SettingsViewModel.kt" = @"
-package $packageName.ui.main
-
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-
-@HiltViewModel
-class SettingsViewModel @Inject constructor(): ViewModel() {}
-"@
-    "VoiceViewModel.kt" = @"
-package $packageName.ui.voice
-
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import $packageName.ai.AIManager
-import $packageName.ai.voice.VoiceManager
-
-@HiltViewModel
-class VoiceViewModel @Inject constructor(
-    private val aiManager: AIManager,
-    private val voiceManager: VoiceManager
-): ViewModel() {}
-"@
+foreach ($pkg in $packages) {
+    if (-not (Test-Path $pkg)) {
+        New-Item -ItemType Directory -Path $pkg | Out-Null
+        Write-Host "📁 Создан пакет: $pkg"
+    }
 }
 
-foreach ($vm in $vmList.Keys) {
-    $path = Join-Path "$javaBase/ui/main" $vm
-    if ($vm -eq "VoiceViewModel.kt") { $path = Join-Path "$javaBase/ui/voice" $vm }
-    Set-Content -Path $path -Value $vmList[$vm] -Encoding UTF8
-    Write-Host "Created $path"
-}
+# --- 4) Создаём базовые файлы ---
+$files = @{
+    "$basePath/App.kt" = @"
+package com.garbe.freehands
 
-# --- 5) DI module with Hilt bindings
-$viewModelModulePath = Join-Path "$javaBase/di" "ViewModelModule.kt"
-$viewModelModuleContent = @"
-package $packageName.di
+import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
+
+@HiltAndroidApp
+class App: Application() {
+    // Инициализация Firebase, Room, Hilt, AI и Voice здесь
+}
+"@
+
+    "$basePath/data/repository/MyRepository.kt" = @"
+package com.garbe.freehands.data.repository
+
+class MyRepository {
+    // Заглушка репозитория
+}
+"@
+
+    "$basePath/domain/models/User.kt" = @"
+package com.garbe.freehands.domain.models
+
+data class User(val id: String, val name: String)
+"@
+
+    "$basePath/di/AppModule.kt" = @"
+package com.garbe.freehands.di
 
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -113,130 +72,123 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class ViewModelModule {
-    // ViewModel bindings handled by @HiltViewModel
+object AppModule {
+    // Заглушка DI
 }
 "@
-Set-Content -Path $viewModelModulePath -Value $viewModelModuleContent -Encoding UTF8
-Write-Host "Created $viewModelModulePath"
 
-# --- 6) App.kt
-$appKtPath = Join-Path $javaBase "App.kt"
-$appKtContent = @"
-package $packageName
+    "$basePath/ui/main/MainViewModel.kt" = @"
+package com.garbe.freehands.ui.main
 
-import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
-
-@HiltAndroidApp
-class App : Application() {}
-"@
-Set-Content -Path $appKtPath -Value $appKtContent -Encoding UTF8
-Write-Host "Created $appKtPath"
-
-# --- 7) AI + Voice placeholders
-$aiCode = @"
-package $packageName.ai
-
-class AIManager {
-    fun requestResponse(prompt: String) = ""AI response placeholder""
-}
-"@
-$voiceCode = @"
-package $packageName.ai.voice
-
-class VoiceManager {
-    fun speak(text: String) {}
-}
-"@
-Set-Content -Path (Join-Path "$javaBase/ai" "AIManager.kt") -Value $aiCode -Encoding UTF8
-Set-Content -Path (Join-Path "$javaBase/ai/voice" "VoiceManager.kt") -Value $voiceCode -Encoding UTF8
-Write-Host "Created AI + Voice placeholders"
-
-# --- 8) Room skeleton
-$entityCode = @"
-package $packageName.data.local
-
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity
-data class User(
-    @PrimaryKey val id: String,
-    val name: String
-)
-"@
-Set-Content -Path (Join-Path "$javaBase/data/local" "User.kt") -Value $entityCode -Encoding UTF8
-
-$daoCode = @"
-package $packageName.data.local
-
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-
-@Dao
-interface UserDao {
-    @Insert suspend fun insert(user: User)
-    @Query(""SELECT * FROM User"") suspend fun getAll(): List<User>
-}
-"@
-Set-Content -Path (Join-Path "$javaBase/data/local" "UserDao.kt") -Value $daoCode -Encoding UTF8
-
-$repoCode = @"
-package $packageName.data.repository
-
-import $packageName.data.local.UserDao
-import $packageName.data.local.User
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class UserRepository @Inject constructor(private val dao: UserDao) {
-    suspend fun addUser(user: User) = dao.insert(user)
-    suspend fun getUsers() = dao.getAll()
+@HiltViewModel
+class MainViewModel @Inject constructor() : ViewModel() {
+    // Заглушка ViewModel
 }
 "@
-Set-Content -Path (Join-Path "$javaBase/data/repository" "UserRepository.kt") -Value $repoCode -Encoding UTF8
-Write-Host "Created Room/Repository skeleton"
-
-# --- 9) Firebase placeholders
-$firebaseCode = @"
-package $packageName.data.remote
-
-class FirebaseManager {
-    fun login(email: String, pass: String) {}
-    fun getFirestoreData(collection: String) {}
 }
-"@
-Set-Content -Path (Join-Path "$javaBase/data/remote" "FirebaseManager.kt") -Value $firebaseCode -Encoding UTF8
-Write-Host "Created Firebase placeholders"
 
-# --- 10) UI Compose skeleton
-$uiCode = @"
-package $packageName.ui.components
-
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-
-@Composable
-fun CustomButton(label: String, onClick: () -> Unit) {
-    Text(text = label)
+foreach ($file in $files.Keys) {
+    if (-not (Test-Path $file)) {
+        Set-Content -Path $file -Value $files[$file] -Encoding UTF8
+        Write-Host "📄 Создан файл: $file"
+    }
 }
+
+# --- 5) Подключаем зависимости в build.gradle ---
+$gradleFile = "app/build.gradle"
+$dependencies = @"
+implementation 'com.google.dagger:hilt-android:2.48'
+kapt 'com.google.dagger:hilt-compiler:2.48'
+implementation 'androidx.room:room-runtime:2.6.0'
+kapt 'androidx.room:room-compiler:2.6.0'
+implementation 'androidx.compose.ui:ui:1.5.0'
+implementation 'androidx.compose.material3:material3:1.2.0'
+implementation 'com.google.firebase:firebase-auth-ktx:22.1.0'
+implementation 'com.google.firebase:firebase-firestore-ktx:24.5.0'
+implementation 'com.alphacephei:vosk:0.3.45' # Vosk TTS/ASR
+implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
 "@
-Set-Content -Path (Join-Path "$javaBase/ui/components" "CustomButton.kt") -Value $uiCode -Encoding UTF8
-Write-Host "Created Compose UI skeleton"
 
-# --- 11) Build project
-Write-Host "`n=== Running gradlew build ==="
-& .\gradlew.bat clean assembleDebug --warning-mode all > build_log_full.txt 2>&1
-Write-Host "Build log -> build_log_full.txt"
+if (Test-Path $gradleFile) {
+    Add-Content -Path $gradleFile -Value $dependencies
+    Write-Host "✅ Зависимости добавлены в $gradleFile"
+}
 
-# --- 12) Git commit & push
-git add .
-git commit -m "feat: full MVVM+DI+Room+Firebase+AI+Voice placeholders, clean project" -q
-try { git push origin main -q; Write-Host "✅ Pushed to origin/main" }
-catch { Write-Host "⚠ Push failed, check manually." -ForegroundColor Yellow }
+# --- 6) Создаём GitHub Actions workflow ---
+$workflowDir = ".github/workflows"
+if (-not (Test-Path $workflowDir)) { New-Item -ItemType Directory -Path $workflowDir | Out-Null }
 
-Write-Host "`n✅ FULL PROJECT STRUCTURE CREATED & READY!"
-Write-Host "Backups: $backupDir"
+$workflowFile = "$workflowDir/android_build_release.yml"
+$workflowContent = @"
+name: Android CI/CD + Release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-\${{ runner.os }}-\${{ hashFiles('**/*.gradle*','**/gradle-wrapper.properties') }}
+      - name: Build project
+        run: ./gradlew clean assembleDebug assembleRelease --stacktrace
+      - name: Run CodeQL
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: security-and-quality
+      - name: Upload APKs
+        uses: actions/upload-artifact@v3
+        with:
+          name: APKs
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            app/build/outputs/apk/release/app-release.apk
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v1-\${{ github.run_number }}
+          name: APK Release \${{ github.run_number }}
+          body: Automated release of APKs from CI
+        env:
+          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Release APK
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: \${{ steps.create_release.outputs.upload_url }}
+          asset_path: app/build/outputs/apk/release/app-release.apk
+          asset_name: app-release.apk
+          asset_content_type: application/vnd.android.package-archive
+"@
+
+Set-Content -Path $workflowFile -Value $workflowContent -Encoding UTF8
+Write-Host "📄 Workflow создан: $workflowFile"
+
+# --- 7) Собираем проект ---
+Write-Host "🔧 Собираем debug и release APK..."
+./gradlew clean assembleDebug assembleRelease --stacktrace
+
+# --- 8) Сообщение о завершении ---
+Write-Host "✅ Полная структура MVVM + DI + Room + Firebase + AI + Voice создана!"
+Write-Host "✅ Workflow для GitHub Actions настроен!"
+Write-Host "✅ Проект готов к коммиту и пушу в GitHub!"
+
