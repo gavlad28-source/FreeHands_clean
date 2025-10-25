@@ -1,13 +1,8 @@
 ﻿package com.freehands.app.ui.main
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MainViewModel : ViewModel() {
-    fun doSomething() {
-        viewModelScope.launch {
-            // TODO
-        }
-    }
-}
+@HiltViewModel
+class MainViewModel @Inject constructor(): ViewModel() {}
