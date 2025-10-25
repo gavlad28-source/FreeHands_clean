@@ -1,12 +1,15 @@
 package com.freehands.assistant.di
 
-import com.freehands.assistant.VoiceListeningService
-import com.freehands.assistant.VoiceAccessibilityService
-import com.freehands.assistant.VoiceInteractionService
+import com.freehands.assistant.service.VoiceAccessibilityService
+import com.freehands.assistant.service.VoiceInteractionSessionService
+import com.freehands.assistant.service.VoiceListeningService
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ServiceComponent
 
 @Module
+@InstallIn(ServiceComponent::class)
 @Suppress("unused")
 abstract class ServiceModule {
     
@@ -17,5 +20,5 @@ abstract class ServiceModule {
     abstract fun contributeVoiceAccessibilityService(): VoiceAccessibilityService
     
     @ContributesAndroidInjector
-    abstract fun contributeVoiceInteractionService(): VoiceInteractionService
+    abstract fun contributeVoiceInteractionService(): VoiceInteractionSessionService
 }

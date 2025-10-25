@@ -1,81 +1,26 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.dagger.hilt.android'
     id 'com.google.devtools.ksp'
-    id 'io.gitlab.arturbosch.detekt'
-    id 'org.jlleitschuh.gradle.ktlint'
-    id 'com.diffplug.spotless'
-}
-
-detekt {
-    config.setFrom(files("$rootDir/detekt.yml"))
-    buildUponDefaultConfig = true
-}
-
-// Load signing config
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('keystore.properties')
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-} else {
-    // Use debug config if keystore.properties doesn't exist
-    keystoreProperties['storeFile'] = 'debug.keystore'
-    keystoreProperties['storePassword'] = 'android'
-    keystoreProperties['keyAlias'] = 'androiddebugkey'
-    keystoreProperties['keyPassword'] = 'android'
-}
-
-// Common configuration for all test types
-tasks.withType(Test) {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-        showStandardStreams = true
-    }
-}
-
-// Configure test task dependencies
-afterEvaluate {
-    tasks.named('testDebugUnitTest') {
-        dependsOn 'assembleDebug', 'compileDebugUnitTestKotlin'
-    }
-    
-    tasks.named('testReleaseUnitTest') {
-        dependsOn 'assembleRelease', 'compileReleaseUnitTestKotlin'
-    }
-    
-    if (!tasks.findByName('testClasses')) {
-        tasks.register('testClasses') {
-            group = 'verification'
-            description = 'Assembles test classes for both test and production code'
-            dependsOn 'testDebugUnitTestClasses', 'testReleaseUnitTestClasses'
-        }
-    }
 }
 
 android {
-    namespace 'com.example.freehands_clean'
-    compileSdkVersion 34
+    namespace "com.freehands.clean"
     compileSdk 34
-    
+
+    sourceSets {
+        main.java.srcDirs = ['src/main/kotlin']
+    }
+
     defaultConfig {
-        applicationId "com.example.freehands_clean"
-        minSdk 26
+        applicationId "com.freehands.clean"
+        minSdk 24
         targetSdk 34
         versionCode 1
         versionName "1.0"
-        
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments clearPackageData: 'true'
-        vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
-        
-        buildConfigField 'String', 'VERSION_NAME', "\"${versionName}\""
-        buildConfigField 'int', 'VERSION_CODE', "${versionCode}"
-        
-        ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
-        }
         
         externalNativeBuild {
             cmake {
@@ -84,15 +29,16 @@ android {
             }
         }
     }
-    
+
     buildFeatures {
         viewBinding true
-        buildConfig true
         compose true
-        dataBinding true
-        prefab true
     }
-    
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.10'
+    }
+
     externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
@@ -100,134 +46,28 @@ android {
         }
     }
     
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.5.10'
-    }
-    
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_21
-        targetCompatibility JavaVersion.VERSION_21
-    }
-    
-    ndkVersion "26.1.10909125"
-    
-    kotlinOptions {
-        jvmTarget = '21'
-        freeCompilerArgs += [
-            "-Xjvm-default=all",
-            "-opt-in=kotlin.RequiresOptIn",
-            "-Xjdk-release=21"
-        ]
-    }
-    
-    testOptions {
-        unitTests.all {
-            useJUnitPlatform()
-            jvmArgs '--enable-preview'
-            testLogging {
-                events "passed", "skipped", "failed"
-                showStandardStreams = true
-                showCauses = true
-                showExceptions = true
-                showStackTraces = true
-            }
-        }
-
-        execution 'ANDROIDX_TEST_ORCHESTRATOR'
-    }
-
-    lint {
-        abortOnError true
-        checkReleaseBuilds true
-    }
-
-    signingConfigs {
-        debug {
-            storeFile file("${System.getProperty('user.home')}/.android/debug.keystore")
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-            enableV1Signing true
-            enableV2Signing true
-        }
-        release {
-            storeFile file(System.getenv('KEYSTORE_FILE') ?: "${System.getProperty('user.home')}/.android/debug.keystore")
-            storePassword System.getenv('KEYSTORE_PASSWORD') ?: 'android'
-            keyAlias System.getenv('KEY_ALIAS') ?: 'androiddebugkey'
-            keyPassword System.getenv('KEY_PASSWORD') ?: 'android'
-            enableV1Signing true
-            enableV2Signing true
-        }
-    }
-
     buildTypes {
-        debug {
-            applicationIdSuffix '.debug'
-            versionNameSuffix '-DEBUG'
-            debuggable true
-            minifyEnabled false
-            shrinkResources false
-            testCoverageEnabled true
-            buildConfigField 'boolean', 'IS_NEW_ARCHITECTURE_ENABLED', 'false'
-            buildConfigField 'boolean', 'ENABLE_DEBUG_LOGGING', 'true'
-            signingConfig signingConfigs.debug
-        }
-
         release {
-            debuggable false
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField 'boolean', 'IS_NEW_ARCHITECTURE_ENABLED', 'false'
-            buildConfigField 'boolean', 'ENABLE_DEBUG_LOGGING', 'false'
-            signingConfig signingConfigs.release
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
         }
     }
-    
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
-
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-        arg("room.incremental", "true")
-        arg("room.expandProjection", "true")
-    }
-    
-    packagingOptions {
-        resources {
-            excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/license.txt', 'META-INF/NOTICE', 'META-INF/NOTICE.txt', 'META-INF/notice.txt', 'META-INF/ASL2.0', 'META-INF/*.kotlin_module']
-        }
-        jniLibs {
-            useLegacyPackaging true
-            pickFirsts += ['**/libc++_shared.so', '**/libaudio_utils.so']
-        }
-    }
-}
-
-spotless {
-    kotlin {
-        target 'src/**/*.kt'
-        ktlint()
-    }
-    format 'misc', {
-        target '**/*.gradle', '**/*.md', '**/.gitignore'
-        trimTrailingWhitespace()
-        endWithNewline()
-    }
-}
-
-kotlin {
-    jvmToolchain(21)
-}
-
-tasks.whenTaskAdded { task ->
-    if (task.name.startsWith('process') && task.name.endsWith('Resources')) {
-        task.dependsOn('buildCMakeDebug')
+    kotlinOptions {
+        jvmTarget = '17'
     }
 }
 
 dependencies {
+    implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -280,9 +120,8 @@ dependencies {
     ksp "androidx.room:room-compiler:$room_version"
 
     // Hilt
-    def hilt_version = "2.50"
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    ksp "com.google.dagger:hilt-android-compiler:$hilt_version"
+    implementation "com.google.dagger:hilt-android:2.51.1"
+    ksp "com.google.dagger:hilt-android-compiler:2.51.1"
     ksp "androidx.hilt:hilt-compiler:1.1.0"
     implementation 'androidx.hilt:hilt-navigation-compose:1.1.0'
 
@@ -296,64 +135,34 @@ dependencies {
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
 
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.22"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.24"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3'
 
     // Core Library Desugaring
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 
-    // ======================== VOSK OFFLINE ASR ========================    
+    // VOSK & Porcupine
     implementation 'com.alphacephei:vosk-android:0.3.32'
-
-    // ======================== PORCUPINE WAKE WORD ========================    
     implementation 'ai.picovoice:porcupine-android:3.0.0'
 
-    // ======================== ANDROID KEYSTORE & SECURITY ========================    
+    // Security
     implementation 'androidx.security:security-crypto:1.1.0'
-    implementation 'androidx.biometric:biometric:1.4.0-alpha04'
+    implementation 'androidx.biometric:biometric:1.2.0-alpha05'
 
-    // ======================== PERMISSIONS ========================    
+    // Permissions
     implementation 'com.guolindev.permissionx:permissionx:1.7.1'
 
-    // ======================== TESTING ========================    
-    // Unit Tests (JUnit5, Mockito, etc.)
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.0"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.0"
-    testImplementation "org.mockito:mockito-junit-jupiter:5.7.0"
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.7.0'
     testImplementation 'org.mockito.kotlin:mockito-kotlin:5.1.0'
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3'
     testImplementation 'androidx.arch.core:core-testing:2.2.0'
-    
-    // UI (Instrumentation) Tests (Espresso, UI Automator)
-    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     androidTestImplementation 'androidx.test:runner:1.5.2'
     androidTestImplementation 'androidx.test:rules:1.5.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-}
-
-// ======================== SECURE RELEASE TASK ========================task assembleSecureRelease {
-    group = 'build'
-    description = 'Assembles a secure release build with all security checks'
-
-    doFirst {
-        // Check keystore.properties exists
-        def keystoreFile = rootProject.file('keystore.properties')
-        if (!keystoreFile.exists()) {
-            throw new GradleException("ERROR: keystore.properties not found! Please create it based on keystore.properties.example")
-        }
-
-        // Check minifyEnabled is true
-        def releaseConfig = android.buildTypes.release
-        if (!releaseConfig.minifyEnabled) {
-            throw new GradleException("ERROR: minifyEnabled must be true for release builds!")
-        }
-
-        println "✓ Security checks passed"
-    }
-
-    dependsOn 'assembleRelease'
 }

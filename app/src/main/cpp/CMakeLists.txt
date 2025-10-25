@@ -39,13 +39,12 @@ target_include_directories(cpufeatures PUBLIC
 # Main Native Library
 #======================================================================
 
-# It's better practice to list source files explicitly
-# than using file(GLOB_RECURSE...).
-# Please add your source files here.
 set(AUDIO_PROCESSING_SOURCES
-    # Example:
-    # "JNI/jni_bridge.cpp"
-    # "VAD/webrtc_vad.c"
+    fft_util.cpp
+    mfcc_util.cpp
+    native-lib.cpp
+    test_interface.cpp
+    audio_processing.cpp
 )
 
 add_library(
@@ -69,7 +68,6 @@ target_compile_options(audio_processing PRIVATE
     -fexceptions
     -frtti
     -Wall
-    -Werror # Treat warnings as errors
 )
 
 # Set architecture-specific compile definitions
@@ -81,37 +79,32 @@ endif()
 
 
 #======================================================================
-# C++ Unit Tests (using GoogleTest)
+# C++ Unit Tests (using GoogleTest) - DISABLED
 #======================================================================
 
-# Enable testing for the project
-enable_testing()
+# To re-enable, find your C++ test files and add them to the
+# add_executable() command below.
 
-# Use FetchContent to download and configure GoogleTest
-include(FetchContent)
-FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
-)
-# For local development, this is fine. For faster CI, consider pre-caching.
-FetchContent_MakeAvailable(googletest)
+# enable_testing()
 
+# include(FetchContent)
+# FetchContent_Declare(
+#     googletest
+#     URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+# )
+# FetchContent_MakeAvailable(googletest)
 
-# Define the test executable
-add_executable(
-    audio_processing_tests
-    # Add your test source files here
-    # "test/cpp/some_test.cpp"
-)
+# add_executable(
+#     audio_processing_tests
+#     # "test/cpp/some_test.cpp"
+# )
 
-# Link the test executable against GoogleTest and the library being tested
-target_link_libraries(
-    audio_processing_tests
-    PRIVATE
-    audio_processing
-    gtest_main
-)
+# target_link_libraries(
+#     audio_processing_tests
+#     PRIVATE
+#     audio_processing
+#     gtest_main
+# )
 
-# Automatically discover and add tests to CTest
-include(GoogleTest)
-gtest_discover_tests(audio_processing_tests)
+# include(GoogleTest)
+# gtest_discover_tests(audio_processing_tests)

@@ -44,6 +44,7 @@ static void bit_reverse(float* x, int n) {
 
 #if HAVE_NEON
 // NEON-optimized complex multiplication
+/* UNUSED
 static inline void complex_multiply(float* out, const float* a, const float* b) {
     // Load complex numbers as interleaved real/imaginary pairs
     float32x4x2_t a_vec = vld2q_f32(a);
@@ -61,8 +62,10 @@ static inline void complex_multiply(float* out, const float* a, const float* b) 
     float32x4x2_t result = {real, imag};
     vst2q_f32(out, result);
 }
+*/
 #else
 // Fallback complex multiplication for non-NEON
+/* UNUSED
 static inline void complex_multiply(float* out, const float* a, const float* b) {
     // Process two complex numbers at a time for better performance
     for (int i = 0; i < 2; i++) {
@@ -75,6 +78,7 @@ static inline void complex_multiply(float* out, const float* a, const float* b) 
         out[2*i + 1] = ar * bi + ai * br; // Imaginary part
     }
 }
+*/
 #endif
 
 // FFT implementation with NEON optimization when available
@@ -97,8 +101,8 @@ void fft(float* input, float* output, int n) {
     for (int len = 2; len <= n; len <<= 1) {
         int half_len = len >> 1;
         float theta = -2.0f * M_PI / len;
-        float w_step_real = cosf(theta);
-        float w_step_imag = sinf(theta);
+        // float w_step_real = cosf(theta); // UNUSED
+        // float w_step_imag = sinf(theta); // UNUSED
 
         #if HAVE_NEON
         // NEON-optimized version for larger FFTs
@@ -118,8 +122,8 @@ void fft(float* input, float* output, int n) {
                     for (int k = 0; k < 4; k++) {
                         w[2*k] = w_real;
                         w[2*k+1] = w_imag;
-                        float new_real = w_real * w_step_real - w_imag * w_step_imag;
-                        float new_imag = w_real * w_step_imag + w_imag * w_step_real;
+                        float new_real = w_real * cosf(theta) - w_imag * sinf(theta);
+                        float new_imag = w_real * sinf(theta) + w_imag * cosf(theta);
                         w_real = new_real;
                         w_imag = new_imag;
                     }
@@ -190,10 +194,12 @@ static void precompute_twiddle_factors(int n, float** w_real, float** w_imag) {
 }
 
 // Free twiddle factors
+/* UNUSED
 static void free_twiddle_factors(float* w_real, float* w_imag) {
     delete[] w_real;
     delete[] w_imag;
 }
+*/
 
 // Inverse FFT (using forward FFT with sign change and scaling)
 void ifft(float* input, float* output, int n) {

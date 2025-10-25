@@ -1,58 +1,6 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     id 'com.android.application' version '8.13.0' apply false
-    id 'com.android.library' version '8.13.0' apply false
-    id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
-    id 'com.google.devtools.ksp' version '1.9.22-1.0.17' apply false
-    id 'com.google.dagger.hilt.android' version '2.57.2' apply false
-    id 'androidx.navigation.safeargs.kotlin' version '2.9.5' apply false
-    id "io.gitlab.arturbosch.detekt" version "1.23.6" apply false
-    id "org.jlleitschuh.gradle.ktlint" version "12.1.1" apply false
-    id "com.osacky.doctor" version "0.9.0" apply false
-    id "com.diffplug.spotless" version "6.25.0" apply false
-    id "com.github.ben-manes.versions" version "0.51.0" apply false
-}
-
-// Define versions in a single place
-ext {
-    // Android SDK versions
-    compileSdkVersion = 34
-    minSdkVersion = 26
-    targetSdkVersion = 34
-    
-    // Kotlin
-    kotlinVersion = '1.9.22'
-
-    // Hilt
-    hiltVersion = '2.50'
-    
-    // Compose
-    composeVersion = '1.6.0'
-    composeCompilerVersion = '1.5.10'
-    
-    // AndroidX
-    coreKtxVersion = '1.12.0'
-    appcompatVersion = '1.6.1'
-    materialVersion = '1.11.0'
-    
-    // Navigation
-    navVersion = '2.7.7'
-    
-    // Room
-    roomVersion = '2.6.1'
-    
-    // WorkManager
-    workVersion = '2.9.0'
-    
-    // Lifecycle
-    lifecycleVersion = '2.7.0'
-    
-    // Testing
-    junitVersion = '4.13.2'
-    extJunitVersion = '1.1.5'
-    espressoVersion = '3.5.1'
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
+    id 'org.jetbrains.kotlin.android' version '1.9.24' apply false
+    id 'com.google.dagger.hilt.android' version '2.51.1' apply false
+    id 'com.google.devtools.ksp' version '1.9.24-1.0.20' apply false
 }

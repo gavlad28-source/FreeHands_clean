@@ -2,16 +2,19 @@ package com.freehands.assistant.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.freehands.assistant.MainViewModel
-import com.freehands.assistant.SettingsViewModel
-import com.freehands.assistant.VoiceViewModel
+import com.freehands.assistant.presentation.MainViewModel
+import com.freehands.assistant.presentation.SettingsViewModel
+import com.freehands.assistant.presentation.viewmodel.VoiceViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
 import kotlin.reflect.KClass
 
 @Module
+@InstallIn(SingletonComponent::class)
 @Suppress("UNUSED")
 abstract class ViewModelModule {
     

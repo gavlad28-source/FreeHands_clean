@@ -82,3 +82,7 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+# User-added ignores
+backup_2025***/
+src_backup/

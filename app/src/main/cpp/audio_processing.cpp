@@ -10,10 +10,11 @@
 // Constants for audio processing
 constexpr float PI = 3.14159265358979323846f;
 constexpr float TWO_PI = 2.0f * PI;
-constexpr float LOG_2 = 0.6931471805599453f;
-constexpr float LOG_10 = 2.302585092994046f;
+// constexpr float LOG_2 = 0.6931471805599453f; // UNUSED
+// constexpr float LOG_10 = 2.302585092994046f; // UNUSED
 
 // NEON-optimized logarithm functions
+/* UNUSED
 static inline float fast_log2(float x) {
     // Fast log2 approximation using bit manipulation
     union { float f; uint32_t i; } vx = { x };
@@ -25,9 +26,11 @@ static inline float fast_log2(float x) {
 static inline float fast_log10(float x) {
     return fast_log2(x) * 0.3010299956639812f; // log10(2)
 }
+*/
 
 #if HAVE_NEON
 // NEON-optimized exponential function
+/* UNUSED
 static inline float32x4_t exp_ps(float32x4_t x) {
     // Implementation of exp using Taylor series approximation
     const float32x4_t a0 = vdupq_n_f32(1.0f);
@@ -48,15 +51,19 @@ static inline float32x4_t exp_ps(float32x4_t x) {
     
     return result;
 }
+*/
 #else
 // Fallback implementation for non-NEON
+/* UNUSED
 static inline float exp_ps(float x) {
     return expf(x);
 }
+*/
 #endif
 
 #if HAVE_NEON
 // NEON-optimized sine function
+/* UNUSED
 static inline float32x4_t sin_ps(float32x4_t x) {
     // Normalize x to [-π, π]
     const float32x4_t pi = vdupq_n_f32(PI);
@@ -79,18 +86,20 @@ static inline float32x4_t sin_ps(float32x4_t x) {
     float32x4_t x2 = vmulq_f32(x, x);
     float32x4_t x3 = vmulq_f32(x2, x);
     float32x4_t x5 = vmulq_f32(x3, x2);
-    float32x4_t x7 = vmulq_f32(x5, x2);
+    // float32x4_t x7 = vmulq_f32(x5, x2); // UNUSED
     
     // sin(x) ≈ x + c1*x³ + c2*x⁵ + c3*x⁷
     float32x4_t result = x;
     result = vmlaq_f32(result, x3, c1);
     result = vmlaq_f32(result, x5, c2);
-    result = vmlaq_f32(result, x7, c3);
+    // result = vmlaq_f32(result, x7, c3); // UNUSED
     
     return result;
 }
+*/
 #else
 // Fallback implementation for non-NEON
+/* UNUSED
 static inline float sin_ps(float x) {
     // Wrap x to [-π, π]
     x = fmodf(x + M_PI, 2.0f * M_PI);
@@ -101,20 +110,24 @@ static inline float sin_ps(float x) {
     float x2 = x * x;
     float x3 = x * x2;
     float x5 = x3 * x2;
-    float x7 = x5 * x2;
+    // float x7 = x5 * x2; // UNUSED
     return x * (1.0f - x2/6.0f * (1.0f - x2/20.0f * (1.0f - x2/42.0f)));
 }
+*/
 #endif
 
 #if HAVE_NEON
 // NEON-optimized cosine function
+/* UNUSED
 static inline float32x4_t cos_ps(float32x4_t x) {
     // cos(x) = sin(x + π/2)
     const float32x4_t half_pi = vdupq_n_f32(PI / 2.0f);
     return sin_ps(vaddq_f32(x, half_pi));
 }
+*/
 #else
 // Fallback implementation for non-NEON
+/* UNUSED
 static inline float cos_ps(float x) {
     // Wrap x to [-π, π]
     x = fmodf(fabsf(x), 2.0f * M_PI);
@@ -123,13 +136,15 @@ static inline float cos_ps(float x) {
     // 6th order Taylor series approximation
     float x2 = x * x;
     float x4 = x2 * x2;
-    float x6 = x4 * x2;
+    // float x6 = x4 * x2; // UNUSED
     return 1.0f - x2/2.0f * (1.0f - x2/12.0f * (1.0f - x2/30.0f));
 }
+*/
 #endif
 
 #if HAVE_NEON
 // NEON-optimized complex multiplication
+/* UNUSED
 static inline void complex_multiply_ps(
     float32x4_t a_real, float32x4_t a_imag,
     float32x4_t b_real, float32x4_t b_imag,
@@ -145,8 +160,10 @@ static inline void complex_multiply_ps(
         vmulq_f32(a_imag, b_real)
     );
 }
+*/
 #else
 // Fallback implementation for non-NEON
+/* UNUSED
 static inline void complex_multiply_ps(
     float a_real, float a_imag,
     float b_real, float b_imag,
@@ -155,9 +172,11 @@ static inline void complex_multiply_ps(
     *out_real = a_real * b_real - a_imag * b_imag;
     *out_imag = a_real * b_imag + a_imag * b_real;
 }
+*/
 #endif
 
 // Vectorized sum with NEON optimization when available
+/* UNUSED
 static inline float vector_sum(float* data, int n) {
     float sum = 0.0f;
     
@@ -194,9 +213,11 @@ static inline float vector_sum(float* data, int n) {
     
     return sum;
 }
+*/
 
 #if HAVE_NEON
 // NEON-optimized vector multiplication and accumulate
+/* UNUSED
 static inline void vector_multiply_accumulate(
     const float* a, const float* b, float* out, int n
 ) {
@@ -217,8 +238,10 @@ static inline void vector_multiply_accumulate(
         out[i] += a[i] * b[i];
     }
 }
+*/
 #else
 // Fallback implementation for non-NEON
+/* UNUSED
 static inline void vector_multiply_accumulate(
     const float* a, const float* b, float* out, int n
 ) {
@@ -235,10 +258,12 @@ static inline void vector_multiply_accumulate(
         out[i] += a[i] * b[i];
     }
 }
+*/
 #endif
 
 #if HAVE_NEON
 // NEON-optimized matrix-vector multiplication
+/* UNUSED
 static void matrix_vector_multiply(
     const float* matrix, const float* vector,
     float* result, int rows, int cols
@@ -271,8 +296,10 @@ static void matrix_vector_multiply(
         result[i] = sum;
     }
 }
+*/
 #else
 // Fallback implementation for non-NEON
+/* UNUSED
 static void matrix_vector_multiply(
     const float* matrix, const float* vector,
     float* result, int rows, int cols
@@ -288,10 +315,12 @@ static void matrix_vector_multiply(
         result[i] = sum;
     }
 }
+*/
 #endif
 
 #if HAVE_NEON
 // NEON-optimized element-wise multiplication
+/* UNUSED
 static void vector_multiply(
     const float* a, const float* b, float* out, int n
 ) {
@@ -310,8 +339,10 @@ static void vector_multiply(
         out[i] = a[i] * b[i];
     }
 }
+*/
 #else
 // Fallback implementation for non-NEON
+/* UNUSED
 static void vector_multiply(
     const float* a, const float* b, float* out, int n
 ) {
@@ -328,10 +359,12 @@ static void vector_multiply(
         out[i] = a[i] * b[i];
     }
 }
+*/
 #endif
 
 #if HAVE_NEON
 // NEON-optimized element-wise addition
+/* UNUSED
 static void vector_add(
     const float* a, const float* b, float* out, int n
 ) {
@@ -350,8 +383,10 @@ static void vector_add(
         out[i] = a[i] + b[i];
     }
 }
+*/
 #else
 // Fallback implementation for non-NEON
+/* UNUSED
 static void vector_add(
     const float* a, const float* b, float* out, int n
 ) {
@@ -368,10 +403,12 @@ static void vector_add(
         out[i] = a[i] + b[i];
     }
 }
+*/
 #endif
 
 #if HAVE_NEON
 // NEON-optimized element-wise subtraction
+/* UNUSED
 static void vector_subtract(
     const float* a, const float* b, float* out, int n
 ) {
@@ -390,8 +427,10 @@ static void vector_subtract(
         out[i] = a[i] - b[i];
     }
 }
+*/
 #else
 // Fallback implementation for non-NEON
+/* UNUSED
 static void vector_subtract(
     const float* a, const float* b, float* out, int n
 ) {
@@ -408,10 +447,12 @@ static void vector_subtract(
         out[i] = a[i] - b[i];
     }
 }
+*/
 #endif
 
 #if HAVE_NEON
 // NEON-optimized vector scaling
+/* UNUSED
 static void vector_scale(
     const float* in, float scale, float* out, int n
 ) {
@@ -430,8 +471,10 @@ static void vector_scale(
         out[i] = in[i] * scale;
     }
 }
+*/
 #else
 // Fallback implementation for non-NEON
+/* UNUSED
 static void vector_scale(
     const float* in, float scale, float* out, int n
 ) {
@@ -448,4 +491,5 @@ static void vector_scale(
         out[i] = in[i] * scale;
     }
 }
+*/
 #endif

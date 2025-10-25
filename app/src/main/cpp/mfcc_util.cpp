@@ -253,7 +253,7 @@ void compute_mfcc(const float* audio_data, int num_samples, int sample_rate,
                  float* mfcc, int num_mfcc, int num_filters) {
     // Constants
     const int frame_size = 1024;  // Must match WINDOW_SIZE in Kotlin
-    const int hop_size = 512;     // Must match HOP_SIZE in Kotlin
+    // const int hop_size = 512;     // UNUSED
     
     // Apply Hamming window
     std::vector<float> windowed(frame_size);
