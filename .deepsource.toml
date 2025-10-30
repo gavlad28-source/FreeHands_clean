@@ -1,4 +1,4 @@
-# ===============================
+﻿# ===============================
 # 🔧 AUTO SETUP DEEPSOURCE CONFIG
 # Author: Vlad + ChatGPT
 # ===============================
@@ -80,3 +80,4 @@ Write-Host "   Войди через GitHub → выбери репозитор�
 Write-Host "   DeepSource автоматически подхватит .deepsource.toml и начнёт анализ кода." -ForegroundColor Yellow
 Write-Host ""
 Write-Host "💡 Готово! Проверяй раздел 'Issues' в DeepSource через пару минут." -ForegroundColor Cyan
+

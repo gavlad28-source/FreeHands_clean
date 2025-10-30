@@ -1,4 +1,4 @@
-version: 2
+﻿version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
@@ -8,3 +8,5 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+
+

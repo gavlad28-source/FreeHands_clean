@@ -1,4 +1,4 @@
-name: Android Auto Build
+﻿name: Android Auto Build
 
 on:
   push:
@@ -64,4 +64,6 @@ jobs:
           path: |
             app/build/outputs/apk/release/*.apk
             app/build/outputs/apk/debug/*.apk
+
+
 

@@ -1,4 +1,4 @@
-build:
+﻿build:
   maxIssues: 10
 
 config:
@@ -31,3 +31,4 @@ style:
 # 
 # style:
 #   - WildcardImport
+
