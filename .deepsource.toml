@@ -81,3 +81,4 @@ Write-Host "   DeepSource автоматически подхватит .deepsou
 Write-Host ""
 Write-Host "💡 Готово! Проверяй раздел 'Issues' в DeepSource через пару минут." -ForegroundColor Cyan
 
+
